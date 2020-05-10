@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on PersonalBlogChangHak</title>
+    <link>https://jordi02183.github.io/categories/</link>
+    <description>Recent content in Categories on PersonalBlogChangHak</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ko-KR</language>
+    <managingEditor>sjc02183@naver.com (ChangHakKim)</managingEditor>
+    <webMaster>sjc02183@naver.com (ChangHakKim)</webMaster>
+    
+	<atom:link href="https://jordi02183.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+  </channel>
+</rss>
