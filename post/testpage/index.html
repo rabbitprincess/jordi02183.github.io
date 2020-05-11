@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>빅오(Big-Oh)와 시간복잡도(Time-Complexity)  | DreamCacao</title>
+  <meta name="description" content=" '빅오(Big-Oh)와 시간복잡도(Time-Complexity)'을 한 번 살펴보세요.">
+  <meta property="og:title" content="빅오(Big-Oh)와 시간복잡도(Time-Complexity)">
+  
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2020-05-11">
+  
+  <meta property="og:description" content=" '빅오(Big-Oh)와 시간복잡도(Time-Complexity)'을 한 번 살펴보세요.">
+  <meta property="og:url" content="https://jordi02183.github.io/post/testpage/">
+  <meta property="og:site_name" content="DreamCacao">
+  
+  <meta property="og:image" content="https://postfiles.pstatic.net/MjAxOTEyMjVfMjMx/MDAxNTc3MjQ3NzIzNjEw.PoxRjY8gBkBphRIPe1GtQg5Xsn5mNq6zE5O2YFtIuOgg.4if3jNQOwxSNJeuvMiFzw66V8mqYvbTXrx5SnyWgEQ8g.PNG.sjc02183/image.png?type=w773">
+  
+  
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="canonical" href="https://jordi02183.github.io/post/testpage/">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/agate.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXX-X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-XXXXXXXX-X');
+  </script>
+  
+  
+  <script type="text/javascript">
+  function toggle_visibility(id) {
+    var e = document.getElementById(id);
+    if (e.className === 'menu')
+      e.className = 'menu hidden';
+    else
+      e.className = 'menu';
+  }
+  </script>
+</head>
+<body>
+  <div class="navbar">    
+    <div class="logo">
+      <a href="/">
+        <img src="/images/logo.png" height="34px" />
+      </a>
+    </div>
+    <div class="burger">
+      <button onclick="toggle_visibility('menu')">
+        <i class="fa fa-bars" aria-hidden="true"></i> 메뉴
+      </button>
+    </div>
+    <div id="menu" class="menu hidden">
+      <ul>
+        <li><a href="/">#DreamCacao</a></li>
+        <li><a href="/categories">#카테고리</a></li>
+        <li><a href="/tags">#태그</a></li>
+        <li><a href="/projects">#프로젝트</a></li>        
+      </ul>
+      <input class="search" id="search-input" type="search" placeholder="검색어" value="">
+    </div>
+  </div>
+  <div class="container">    
+
+<div class="post">
+  <div class="post-title">
+    <a href="https://jordi02183.github.io/post/testpage/">
+      <img src="/images/post-title-icon.png" />
+      <div class="post-meta">
+        <time>2020년 05월 11일 14시 46분</time>
+        <h1>빅오(Big-Oh)와 시간복잡도(Time-Complexity)</h1>
+      </div>
+    </a>
+  </div>
+  <div class="post-toc">
+    <span class="title">차례</span>
+    <nav id="TableOfContents"></nav>
+  </div>
+  <section class="post-content">
+    <p>한정되어 있는 자원에서 그 자원을 항상 효율적으로 사용해야 할 때, 어떤 알고리즘이 좋은 알고리즘일까? 간단하게 두 가지 기준을 두어보자.</p>
+<ol>
+<li>
+<p>빠르게 실행되고(실행시간)</p>
+</li>
+<li>
+<p>자리를 적게 차지하는(기억장소) 알고리즘</p>
+</li>
+</ol>
+<p>을 좋은 알고리즘이라고 생각할 수 있다. 실제로 데이터구조와 알고리즘에 대한 공부는 이 분석 방법에 대한 배경지식 없이는 무의미하다고 할 수 있다. 실행시간이 빠르더라도 기억장소 요구량이 크거나, 기억장소 요구량은 많지 않지만 실행시간이 느리다면 좋은 프로그램이라 할 수 없다.</p>
+<p>하지만 기억장치 제조기술이 눈부시게 발전하면서 기억장치 제조기술 발전과 기억장치 값 하락이 맞물려 기억장소 활용법에 대해서는 어느정도 관대해지는 경향이 있어 최근의 알고리즘은 실행시간을 줄이는 것을 위주로 하고 있고, Dynamic Programming(다이나믹 프로그래밍)같이 공간을 마구 사용해서 시간복잡도를 줄이는 변태적인 방법까지 사용하고 있다.</p>
+<p>그렇다면 컴퓨터의 실행시간은 어떻게 정의할까? 시간으로? 컴퓨터의 성능에 따라 달라지는 시간은? 그 복잡한 과정을 해결하기 위해 과학자들은 놀라운 모델을 창조해냈다.</p>
+<p>​</p>
+<p>임의접근기계 모델(Random Access Machine Model)</p>
+<p>​</p>
+<p>복잡한 컴퓨터에서 일어나는 복잡한 일들을 모두 실행시간으로 포함시키는 것은 너무나도 복잡하고 인간에게 귀찮은 일이기 때문에, 컴퓨터 공학자들은 이를 추상화시키고 간단화하였다. 임의접근기계라 불리는 간단한 컴퓨터는 하나의 중앙처리장치(CPU)와 무제한의 메모리로 구성되어있다고 가정한다. 어떠한 셀의 처리도 원시 작업시간, 1의 시간이 들어간다고 가정한다.</p>
+<p>-&gt; 문제가 너무 간단해졌다! 원시작업시간은</p>
+<ol>
+<li>
+<p>산술식/논리식의 평가(EXP)</p>
+</li>
+<li>
+<p>변수에 특정 값을 치환(ASS)</p>
+</li>
+<li>
+<p>배열에 있는 원소의 접근(IND)</p>
+</li>
+<li>
+<p>Method 호출(CAL)</p>
+</li>
+<li>
+<p>Method 반환(RET)</p>
+</li>
+</ol>
+<p>등으로 정의되며 이 모든 실행은 1의 시간이 들어간다.</p>
+<p>​</p>
+<p>문제 1. 2차 for문을 10번씩 돌리면 몇의 시간이 걸리게 될까? -&gt; 10^2 = 100의 시간이 걸린다.</p>
+
+  </section>
+  <div class="share">    
+    <a
+      href="//www.facebook.com/sharer.php?src=bm&u=https%3a%2f%2fjordi02183.github.io%2fpost%2ftestpage%2f&t=%eb%b9%85%ec%98%a4%28Big-Oh%29%ec%99%80%20%ec%8b%9c%ea%b0%84%eb%b3%b5%ec%9e%a1%eb%8f%84%28Time-Complexity%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-facebook"></i
+    ></a>
+    <a
+      href="//twitter.com/intent/tweet?url=https%3a%2f%2fjordi02183.github.io%2fpost%2ftestpage%2f&text=%eb%b9%85%ec%98%a4%28Big-Oh%29%ec%99%80%20%ec%8b%9c%ea%b0%84%eb%b3%b5%ec%9e%a1%eb%8f%84%28Time-Complexity%29&tw_p=tweetbutton"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-twitter"></i
+    ></a>
+    <a
+      href="//getpocket.com/edit?url=https%3a%2f%2fjordi02183.github.io%2fpost%2ftestpage%2f&title=%eb%b9%85%ec%98%a4%28Big-Oh%29%ec%99%80%20%ec%8b%9c%ea%b0%84%eb%b3%b5%ec%9e%a1%eb%8f%84%28Time-Complexity%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-get-pocket"></i
+    ></a>
+    <a
+      href="//plus.google.com/share?url=https%3a%2f%2fjordi02183.github.io%2fpost%2ftestpage%2f"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-google-plus"></i
+    ></a>
+  </div>
+  <div class="post-meta-code">
+    <div class="desc">
+      친절한
+      
+      <a href="mailto:sjc02183@naver.com">ChangHakKim</a>
+      
+      님이
+      <span class="highlight">2020년 05월 11일 14시 46분</span> 
+      에 작성한 글입니다.
+    </div>
+    <div class="desc">
+      
+      <div class="desc">
+        <span class="fixed-desc">_카테고리</span>
+        
+        
+        <a href="https://jordi02183.github.io//categories/data-structure">#Data Structure</a>
+        
+      </div>
+      
+      <div class="desc">
+        <span class="fixed-desc">_태그</span>
+        
+      </div>
+    </div>
+  </div>  
+  
+  <div class="post-comment">    
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "XXXX" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>    
+  </div>
+  
+  <div class="recommend-articles">
+    다음으로 읽을만한 글입니다.
+    <ul>
+      
+      
+    </ul>
+  </div>
+</div>
+
+<div class="go-top">
+  <a href="#" class="go-top-button">
+    <i class="fa fa-angle-double-up"></i>
+    <span>위로</span>
+  </a>
+</div>
+<footer class="footer">
+  COPYRIGHT (C) <a href="https://blog.lulab.net">DONGGEUN,BANG (LUBANG).</a><br />
+  ALL RIGHTS RESERVED.
+</footer>
+</body>
+</html>
+
