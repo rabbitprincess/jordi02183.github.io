@@ -15,10 +15,12 @@ img {
 
 /* Navbar */
 .navbar {
-  height: 80px;
+  height: 40px;
   background: white;
   padding: 8px 16px 4px 16px;
   border-bottom: #eeeeee solid 1px;
+  align-self: center;
+  align-content: center;
 }
 .navbar > .logo {
   float: left;

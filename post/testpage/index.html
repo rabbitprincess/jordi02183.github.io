@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>빅오(Big-Oh)와 시간복잡도(Time-Complexity)  | DreamCacao</title>
+  <title>빅오(Big-Oh)와 시간복잡도(Time-Complexity)  | 전체글보기</title>
   <meta name="description" content=" '빅오(Big-Oh)와 시간복잡도(Time-Complexity)'을 한 번 살펴보세요.">
   <meta property="og:title" content="빅오(Big-Oh)와 시간복잡도(Time-Complexity)">
   
@@ -12,7 +12,7 @@
   
   <meta property="og:description" content=" '빅오(Big-Oh)와 시간복잡도(Time-Complexity)'을 한 번 살펴보세요.">
   <meta property="og:url" content="https://jordi02183.github.io/post/testpage/">
-  <meta property="og:site_name" content="DreamCacao">
+  <meta property="og:site_name" content="전체글보기">
   
   <meta property="og:image" content="https://postfiles.pstatic.net/MjAxOTEyMjVfMjMx/MDAxNTc3MjQ3NzIzNjEw.PoxRjY8gBkBphRIPe1GtQg5Xsn5mNq6zE5O2YFtIuOgg.4if3jNQOwxSNJeuvMiFzw66V8mqYvbTXrx5SnyWgEQ8g.PNG.sjc02183/image.png?type=w773">
   
@@ -60,10 +60,10 @@
     </div>
     <div id="menu" class="menu hidden">
       <ul>
-        <li><a href="/">#DreamCacao</a></li>
+        <li><a href="/">#전체글보기</a></li>
         <li><a href="/categories">#카테고리</a></li>
         <li><a href="/tags">#태그</a></li>
-        <li><a href="/projects">#프로젝트</a></li>        
+        <li><a href="/projects">#포트폴리오</a></li>        
       </ul>
       <input class="search" id="search-input" type="search" placeholder="검색어" value="">
     </div>
@@ -121,6 +121,13 @@
 <p>등으로 정의되며 이 모든 실행은 1의 시간이 들어간다.</p>
 <p>​</p>
 <p>문제 1. 2차 for문을 10번씩 돌리면 몇의 시간이 걸리게 될까? -&gt; 10^2 = 100의 시간이 걸린다.</p>
+<p>Big-Oh는 굉장히 신중하고 비관적인 모델인데, 어떤 작업이든 최악의 상황을 대비하는 친구이다. 두 개의 함수 f(n)과 g(n)이 주어졌을 때, 모든 n&gt;=n0에 대해 |f(n)| &lt;= c|g(n)|을 만족하는 2개의 상수 c와 n0이 존재하며 fn = O(g(n))이다.</p>
+<p>간단하게 말하면 최고 차항이 존재하면 그 아래것은 고려할 필요가 없다는 것이다.</p>
+<p>-&gt; 어떤 식의 복잡도가 3n^2 + 10logn + 2n 이라면 빅-오에서는 N^2이다.</p>
+<p>팁 : 시간복잡도에서 log를 주시하자. n와 nlogn은 비교적 시간복잡도에서 차이가 나지 않지만(차이가 나긴 한다!), nlogn과 n^2의 시간복잡도는 그에 비해 하늘과 땅 차이가 난다. 2^n은 말할것도 없고.</p>
+<p>​</p>
+<p>대부분의 시간복잡도 계산은 n을 logn으로 바꾸면서 드라마틱한 변화를 이끌어내는 경우가 많다(퀵 정렬, 다이나믹 프로그래밍 등등..)</p>
+<p>​</p>
 
   </section>
   <div class="share">    
@@ -147,11 +154,11 @@
   </div>
   <div class="post-meta-code">
     <div class="desc">
-      친절한
+      postAuthorPrefix
       
       <a href="mailto:sjc02183@naver.com">ChangHakKim</a>
       
-      님이
+      이
       <span class="highlight">2020년 05월 11일 14시 46분</span> 
       에 작성한 글입니다.
     </div>
