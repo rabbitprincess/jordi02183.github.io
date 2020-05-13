@@ -50,7 +50,7 @@
   <div class="navbar">    
     <div class="logo">
       <a href="/">
-        <img src="/images/logo.png" height="34px" />
+        <img src="/images/logo.png" height="48px" />
       </a>
     </div>
     <div class="burger">
@@ -60,10 +60,10 @@
     </div>
     <div id="menu" class="menu hidden">
       <ul>
-        <li><a href="/">#전체글보기</a></li>
-        <li><a href="/categories">#카테고리</a></li>
-        <li><a href="/tags">#태그</a></li>
-        <li><a href="/projects">#포트폴리오</a></li>        
+        <li><a href="/">전체글보기</a></li>
+        <li><a href="/categories">카테고리</a></li>
+        <li><a href="/tags">태그</a></li>
+        <li><a href="/projects">포트폴리오</a></li>        
       </ul>
       <input class="search" id="search-input" type="search" placeholder="검색어" value="">
     </div>
@@ -75,17 +75,24 @@
     <a href="https://jordi02183.github.io/post/testpage/">
       <img src="/images/post-title-icon.png" />
       <div class="post-meta">
-        <time>2020년 05월 11일 14시 46분</time>
+        <time>11111111년 1111월 1111일 1111시 1111분</time>
         <h1>빅오(Big-Oh)와 시간복잡도(Time-Complexity)</h1>
       </div>
     </a>
   </div>
   <div class="post-toc">
     <span class="title">차례</span>
-    <nav id="TableOfContents"></nav>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#소개">소개</a></li>
+    <li><a href="#임의접근기계-모델random-access-machine-model">임의접근기계 모델(Random Access Machine Model)</a></li>
+    <li><a href="#big-o">Big-O</a></li>
+  </ul>
+</nav>
   </div>
   <section class="post-content">
-    <p>한정되어 있는 자원에서 그 자원을 항상 효율적으로 사용해야 할 때, 어떤 알고리즘이 좋은 알고리즘일까? 간단하게 두 가지 기준을 두어보자.</p>
+    <h2 id="소개">소개</h2>
+<p>한정되어 있는 자원에서 그 자원을 항상 효율적으로 사용해야 할 때, 어떤 알고리즘이 좋은 알고리즘일까? 간단하게 두 가지 기준을 두어보자.</p>
 <ol>
 <li>
 <p>빠르게 실행되고(실행시간)</p>
@@ -97,8 +104,7 @@
 <p>을 좋은 알고리즘이라고 생각할 수 있다. 실제로 데이터구조와 알고리즘에 대한 공부는 이 분석 방법에 대한 배경지식 없이는 무의미하다고 할 수 있다. 실행시간이 빠르더라도 기억장소 요구량이 크거나, 기억장소 요구량은 많지 않지만 실행시간이 느리다면 좋은 프로그램이라 할 수 없다.</p>
 <p>하지만 기억장치 제조기술이 눈부시게 발전하면서 기억장치 제조기술 발전과 기억장치 값 하락이 맞물려 기억장소 활용법에 대해서는 어느정도 관대해지는 경향이 있어 최근의 알고리즘은 실행시간을 줄이는 것을 위주로 하고 있고, Dynamic Programming(다이나믹 프로그래밍)같이 공간을 마구 사용해서 시간복잡도를 줄이는 변태적인 방법까지 사용하고 있다.</p>
 <p>그렇다면 컴퓨터의 실행시간은 어떻게 정의할까? 시간으로? 컴퓨터의 성능에 따라 달라지는 시간은? 그 복잡한 과정을 해결하기 위해 과학자들은 놀라운 모델을 창조해냈다.</p>
-<p>임의접근기계 모델(Random Access Machine Model)</p>
-<p>​</p>
+<h2 id="임의접근기계-모델random-access-machine-model">임의접근기계 모델(Random Access Machine Model)</h2>
 <p>복잡한 컴퓨터에서 일어나는 복잡한 일들을 모두 실행시간으로 포함시키는 것은 너무나도 복잡하고 인간에게 귀찮은 일이기 때문에, 컴퓨터 공학자들은 이를 추상화시키고 간단화하였다. 임의접근기계라 불리는 간단한 컴퓨터는 하나의 중앙처리장치(CPU)와 무제한의 메모리로 구성되어있다고 가정한다. 어떠한 셀의 처리도 원시 작업시간, 1의 시간이 들어간다고 가정한다.</p>
 <p>-&gt; 문제가 너무 간단해졌다! 원시작업시간은</p>
 <ol>
@@ -118,16 +124,15 @@
 <p>Method 반환(RET)</p>
 </li>
 </ol>
-<p>등으로 정의되며 이 모든 실행은 1의 시간이 들어간다.</p>
-<p>​</p>
+<p>등으로 정의되며 이 모든 실행은 1의 시간이 들어간다.
+s
+​</p>
 <p>문제 1. 2차 for문을 10번씩 돌리면 몇의 시간이 걸리게 될까? -&gt; 10^2 = 100의 시간이 걸린다.</p>
-<p>Big-Oh는 굉장히 신중하고 비관적인 모델인데, 어떤 작업이든 최악의 상황을 대비하는 친구이다. 두 개의 함수 f(n)과 g(n)이 주어졌을 때, 모든 n&gt;=n0에 대해 |f(n)| &lt;= c|g(n)|을 만족하는 2개의 상수 c와 n0이 존재하며 fn = O(g(n))이다.</p>
-<p>간단하게 말하면 최고 차항이 존재하면 그 아래것은 고려할 필요가 없다는 것이다.</p>
+<h2 id="big-o">Big-O</h2>
+<p>Big-Oh는 굉장히 신중하고 비관적인 모델인데, 어떤 작업이든 최악의 상황을 대비하는 모델이다. 두 개의 함수 f(n)과 g(n)이 주어졌을 때, 모든 n&gt;=n0에 대해 |f(n)| &lt;= c|g(n)|을 만족하는 2개의 상수 c와 n0이 존재하며 fn = O(g(n))이다.(간단하게 말하면 최고 차항이 존재하면 그 아래것은 고려할 필요가 없다는 것이다.)</p>
 <p>-&gt; 어떤 식의 복잡도가 3n^2 + 10logn + 2n 이라면 빅-오에서는 N^2이다.</p>
 <p>팁 : 시간복잡도에서 log를 주시하자. n와 nlogn은 비교적 시간복잡도에서 차이가 나지 않지만(차이가 나긴 한다!), nlogn과 n^2의 시간복잡도는 그에 비해 하늘과 땅 차이가 난다. 2^n은 말할것도 없고.</p>
-<p>​</p>
 <p>대부분의 시간복잡도 계산은 n을 logn으로 바꾸면서 드라마틱한 변화를 이끌어내는 경우가 많다(퀵 정렬, 다이나믹 프로그래밍 등등..)</p>
-<p>​</p>
 
   </section>
   <div class="share">    
@@ -159,7 +164,7 @@
       <a href="mailto:sjc02183@naver.com">ChangHakKim</a>
       
       이
-      <span class="highlight">2020년 05월 11일 14시 46분</span> 
+      <span class="highlight">11111111년 1111월 1111일 1111시 1111분</span> 
       에 작성한 글입니다.
     </div>
     <div class="desc">
