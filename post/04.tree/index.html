@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.트리와 트리의 순회 (Tree&amp;Traverse)  | 전체글보기</title>
+  <meta name="description" content=" '4.트리와 트리의 순회 (Tree&amp;Traverse)'을 한 번 살펴보세요.">
+  <meta property="og:title" content="4.트리와 트리의 순회 (Tree&amp;Traverse)">
+  
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2020-05-14">
+  
+  <meta property="og:description" content=" '4.트리와 트리의 순회 (Tree&amp;Traverse)'을 한 번 살펴보세요.">
+  <meta property="og:url" content="https://jordi02183.github.io/post/04.tree/">
+  <meta property="og:site_name" content="전체글보기">
+  
+  <meta property="og:image" content="https://jordi02183.github.io/images/Tree.png">
+  
+  
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="canonical" href="https://jordi02183.github.io/post/04.tree/">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/agate.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXX-X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-XXXXXXXX-X');
+  </script>
+  
+  
+  <script type="text/javascript">
+  function toggle_visibility(id) {
+    var e = document.getElementById(id);
+    if (e.className === 'menu')
+      e.className = 'menu hidden';
+    else
+      e.className = 'menu';
+  }
+  </script>
+</head>
+<body>
+  <div class="navbar">    
+    <div class="logo">
+      <a href="/">
+        <img src="/images/logo.png" height="42px" />
+      </a>
+    </div>
+    <div class="burger">
+      <button onclick="toggle_visibility('menu')">
+        <i class="fa fa-bars" aria-hidden="true"></i> 메뉴
+      </button>
+    </div>
+    <div id="menu" class="menu hidden">
+      <ul>
+        <li><a href="/">전체글보기</a></li>
+        <li><a href="/categories">카테고리</a></li>
+        <li><a href="/tags">태그</a></li>
+        <li><a href="/projects">포트폴리오</a></li>        
+      </ul>
+      <input class="search" id="search-input" type="search" placeholder="검색어" value="">
+    </div>
+  </div>
+  <div class="container">    
+
+<div class="post">
+  <div class="post-title">
+    <a href="https://jordi02183.github.io/post/04.tree/">
+      <img src="/images/post-title-icon.png" />
+      <div class="post-meta">
+        <time>2020년 5월 14일 14시 20분</time>
+        <h1>4.트리와 트리의 순회 (Tree&amp;Traverse)</h1>
+      </div>
+    </a>
+  </div>
+  <div class="post-toc">
+    <span class="title">차례</span>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#트리tree">트리(Tree)</a></li>
+    <li><a href="#이진-트리">이진 트리</a></li>
+    <li><a href="#연결리스트를-이용한-이진-트리의-구현">연결리스트를 이용한 이진 트리의 구현</a></li>
+    <li><a href="#다른-경우에는-어떻게-구현하지">다른 경우에는 어떻게 구현하지?</a></li>
+    <li><a href="#트리의-순회traverse">트리의 순회(Traverse)</a></li>
+    <li><a href="#재귀를-이용한-순회의-구현c언어">재귀를 이용한 순회의 구현(C언어)</a></li>
+  </ul>
+</nav>
+  </div>
+  <section class="post-content">
+    <h2 id="트리tree">트리(Tree)</h2>
+<p>트리는 첫 번째로 경험할 수 있는, 가장 간단한 비선형 자료구조이다. 트리는 하나의 Root와 0개 이상의 child로 이루어진 노드로 이루어진, 거꾸로 된 나무(tree)구조이다.</p>
+<p>트리의 특징</p>
+<ul>
+<li>트리는 하나의 루트 노드를 갖는다.</li>
+<li>루트 노드는 0개 이상의 자식 노드를 갖고 있다.</li>
+<li>그 자식 노드 또한 0개 이상의 자식 노드를 갖고 있고, 이는 반복적으로 정의된다.</li>
+<li>노드(node)들과 노드들을 연결하는 간선(edge)들로 구성되어 있다.</li>
+<li>트리에는 사이클(cycle)이 존재할 수 없다.</li>
+<li>노드들은 특정 순서로 나열될 수도 있고 그럴 수 없을 수도 있다.</li>
+<li>각 노드는 부모 노드로 갈 수 있는 길(포인터)이 있을 수도 있고 없을 수도 있다.</li>
+<li>각 노드는 어떤 자료형으로도 표현 가능하다. 대표적으로 배열과 리스트.
+<figure>
+    <img src="/images/Tree.png"/> 
+</figure>
+</li>
+</ul>
+<h2 id="이진-트리">이진 트리</h2>
+<p>트리 중에서도 이진 트리(Binary Tree)가 구현의 용이함 등을 이유로 많은 부분에서 사용된다. 이진 트리는 각 노드가 최대 두 개의 자식을 갖는 트리를 의미한다. 여기서는 구현의 용이함을 이유로 이진 트리만 구현해보도록 하자.</p>
+<h2 id="연결리스트를-이용한-이진-트리의-구현">연결리스트를 이용한 이진 트리의 구현</h2>
+<p>이진 트리는 사실 리스트가 하나의 뒷 노드를 가진 것에서 하나를 추가해, 두 개의 자손을 가지게 구현하면 된다.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span><span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span><span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span><span style="color:#75715e">&lt;string.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> tagNode {
+	<span style="color:#66d9ef">int</span> data;
+	<span style="color:#66d9ef">struct</span> tagNode <span style="color:#f92672">*</span>left;
+	<span style="color:#66d9ef">struct</span> tagNode <span style="color:#f92672">*</span>right;
+}Node;
+
+Node<span style="color:#f92672">*</span> <span style="color:#a6e22e">createNode</span>(<span style="color:#66d9ef">int</span> element, Node<span style="color:#f92672">*</span> left, Node<span style="color:#f92672">*</span> right) {
+	Node <span style="color:#f92672">*</span>tmp <span style="color:#f92672">=</span> (Node<span style="color:#f92672">*</span>)malloc(<span style="color:#66d9ef">sizeof</span>(Node));
+	tmp<span style="color:#f92672">-&gt;</span>data <span style="color:#f92672">=</span> element;
+	tmp<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> left;
+	tmp<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> right;
+	<span style="color:#66d9ef">return</span> tmp;
+}
+
+<span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">appendLeftNode</span>(<span style="color:#66d9ef">int</span> element, Node<span style="color:#f92672">*</span> parent){
+    Node <span style="color:#f92672">*</span> tmp <span style="color:#f92672">=</span> createNode(element, NULL,NULL);
+    <span style="color:#66d9ef">if</span>(parent<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">!=</span> NULL){
+        printf(<span style="color:#e6db74">&#34;left Node is not NULL!&#34;</span>);
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+    }
+    <span style="color:#66d9ef">else</span> parent<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> tmp;
+}
+
+<span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">appendLeftNode</span>(<span style="color:#66d9ef">int</span> element, Node<span style="color:#f92672">*</span> parent){
+    Node <span style="color:#f92672">*</span> tmp <span style="color:#f92672">=</span> createNode(element, NULL,NULL);
+    <span style="color:#66d9ef">if</span>(parent<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">!=</span> NULL){
+        printf(<span style="color:#e6db74">&#34;right Node is not NULL!&#34;</span>);
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+    }
+    <span style="color:#66d9ef">else</span> parent<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> tmp;
+}
+
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+	Node <span style="color:#f92672">*</span>root <span style="color:#f92672">=</span> createNode(<span style="color:#ae81ff">0</span>, NULL, NULL);
+    appendLeftNode(<span style="color:#ae81ff">3</span>,root);
+    appendRightNode(<span style="color:#ae81ff">5</span>,root);
+
+	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}</code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="다른-경우에는-어떻게-구현하지">다른 경우에는 어떻게 구현하지?</h2>
+<p>연결리스트 뿐만 아니라 배열로도 작성할 수 있다. 배열의 경우는 자식의 노드가 부모보다 두 배가 된다는 특성을 이용해 한 줄의 배열로 정의하면 된다. 만약 루트 노드를 index 1로 잡으면, 자식의 노드는 부모의 값*2 / 부모의 값 * 2+1, 부모의 노드는 자식의 값 / 2만 하면 되기 때문에 찾기가 쉽다. 다만 이는 포화 이진트리가 아닐때 빈 배열이 많이 생길 수 있다는 단점이 있다.(나중에 Heap 구현할때 사용 예정)</p>
+<p>그럼 자식이 두개 이상을 가질 수 있는 트리는 어떻게 구현하냐?
+-&gt; 자식을 배열 형태로 정렬해 추가할 때마다 새로 동적 할당을 하거나, 자식을 리스트 구조로 만들 수가 있다. 여기서도 역시 리스트 형태는 탐색에 O(n)이 걸리고, 배열 형태는 삽입/삭제에 O(n)이 걸린다.
+-&gt; 자식의 경우에 공간 하나를 더 투자해 부모 노드를 가리키게 만듦으로써 트리를 올라가는 시간을 절약하는 경우도 있다. 만드는 것은 설계자 마음대로.</p>
+<h2 id="트리의-순회traverse">트리의 순회(Traverse)</h2>
+<p>트리에서의 매우 중요한 작업으로 순회(traversal)가 있다. 순회란 트리의 노드들을 체계적인 방식으로 중복 없이 딱 한번씩만 방문하는 것이다. 1차원적인 선형 데이터구조인 큐,스택과 다르게 트리는 2차원 구조를 취하고 있기 때문에 보다 조직적인 순서가 필요하다. 크게 전위순회, 중위순회, 후위순회의 3가지 방법으로 움직인다. 선위순회는 노드가 그의 자손들보다 앞서 방문되고, 후위순회는 노드가 그의 자손들보다 나중에 방문된다. 중위순회는 이진 트리에서만 가능한 방법인데, 노드가 그의 왼쪽 부트리보다는 나중에, 오른쪽 부트리보다는 앞서 방문되는 구조이다.(사실 이진 트리 아니여도 일정 숫자의 자식 노드까지만 보고 노드를 들르는 구조도 이론상 가능하긴 하다&hellip; 별로 실전성이 없어서 그렇지..)
+<figure>
+    <img src="/images/traverse.png"/> 
+</figure>
+
+예를 들면, 위와 같은 트리가 있을 때</p>
+<p>전위순회는 ABEKLFCGDHMIJ 순으로 순회하고</p>
+<p>후위 순회는 KLEFBGCMHIJDA 순으로 순회한다.(자손이 모두 순회되어야 부모가 순회된다는 것을 이해하자.)</p>
+<p>이진 트리에서만 사용되는 중위 순회는 말그대로 왼쪽에서부터 읽어나간다.
+<figure>
+    <img src="/images/perfecttraverse.png"/> 
+</figure>
+
+위와 같은 트리에서 중위순회는 8-4-9-2-10-5-1-6-3-7 순이다. 왼쪽부터 읽어나가면 되니 가장 쉬운듯?
+​</p>
+<h2 id="재귀를-이용한-순회의-구현c언어">재귀를 이용한 순회의 구현(C언어)</h2>
+<p>트리의 탐색은 트리 자체로도 중요하지만, 재귀와 스택에 대해서 이해하는데에도 매우 유용하기 때문에 꼭 자기 손으로 한번씩 구현해보는 것을 추천한다. 아래는 재귀를 이용해 이진트리를 전위순회 / 중위순회 / 후위순회 순으로 구현한 예이다.
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">//전위 순회
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">preOrder</span>(Node <span style="color:#f92672">*</span>tmp) {
+    printf(<span style="color:#e6db74">&#34;%d 데이터를 방문했습니다.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, tmp<span style="color:#f92672">-&gt;</span>data);
+   	<span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">!=</span> NULL) {
+   		preOrder(v<span style="color:#f92672">-&gt;</span>left);
+   	}
+   	<span style="color:#66d9ef">if</span> (v<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">!=</span> NULL) {
+   		preOrder(v<span style="color:#f92672">-&gt;</span>right);
+    }
+}
+<span style="color:#75715e">//중위 순회
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">inOrder</span>(Node <span style="color:#f92672">*</span>tmp) {
+   	<span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">!=</span> NULL) {
+   		preOrder(v<span style="color:#f92672">-&gt;</span>left);
+   	}
+    printf(<span style="color:#e6db74">&#34;%d 데이터를 방문했습니다.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, tmp<span style="color:#f92672">-&gt;</span>data);
+   	<span style="color:#66d9ef">if</span> (v<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">!=</span> NULL) {
+   		preOrder(v<span style="color:#f92672">-&gt;</span>right);
+    }
+}
+<span style="color:#75715e">//후위 순회
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">postOrder</span>(Node <span style="color:#f92672">*</span>tmp) {
+   	<span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">!=</span> NULL) {
+   		preOrder(v<span style="color:#f92672">-&gt;</span>left);
+   	}
+   	<span style="color:#66d9ef">if</span> (v<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">!=</span> NULL) {
+   		preOrder(v<span style="color:#f92672">-&gt;</span>right);
+    }
+    printf(<span style="color:#e6db74">&#34;%d 데이터를 방문했습니다.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, tmp<span style="color:#f92672">-&gt;</span>data);
+}</code></pre></td></tr></table>
+</div>
+</div></p>
+<p>print문을 어디에 두느냐로 이런 큰 변경이 생긴다는 게 참 신기하지 않나?</p>
+<p>재귀 없이 Queue와 Stack을 이용해도 트리의 순회가 가능하다는 것을 알아두자. 심심하면 구현해봐도 좋고.</p>
+
+  </section>
+  <div class="share">    
+    <a
+      href="//www.facebook.com/sharer.php?src=bm&u=https%3a%2f%2fjordi02183.github.io%2fpost%2f04.tree%2f&t=4.%ed%8a%b8%eb%a6%ac%ec%99%80%20%ed%8a%b8%eb%a6%ac%ec%9d%98%20%ec%88%9c%ed%9a%8c%20%28Tree%26Traverse%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-facebook"></i
+    ></a>
+    <a
+      href="//twitter.com/intent/tweet?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f04.tree%2f&text=4.%ed%8a%b8%eb%a6%ac%ec%99%80%20%ed%8a%b8%eb%a6%ac%ec%9d%98%20%ec%88%9c%ed%9a%8c%20%28Tree%26Traverse%29&tw_p=tweetbutton"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-twitter"></i
+    ></a>
+    <a
+      href="//getpocket.com/edit?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f04.tree%2f&title=4.%ed%8a%b8%eb%a6%ac%ec%99%80%20%ed%8a%b8%eb%a6%ac%ec%9d%98%20%ec%88%9c%ed%9a%8c%20%28Tree%26Traverse%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-get-pocket"></i
+    ></a>
+    <a
+      href="//plus.google.com/share?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f04.tree%2f"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-google-plus"></i
+    ></a>
+  </div>
+  <div class="post-meta-code">
+    <div class="desc">
+      postAuthorPrefix
+      
+      <a href="mailto:sjc02183@naver.com">ChangHakKim</a>
+      
+      이
+      <span class="highlight">2020년 5월 14일 14시 20분</span> 
+      에 작성한 글입니다.
+    </div>
+    <div class="desc">
+      
+      <div class="desc">
+        <span class="fixed-desc">_카테고리</span>
+        
+        
+        <a href="https://jordi02183.github.io//categories/data-structure">#Data Structure</a>
+        
+      </div>
+      
+      <div class="desc">
+        <span class="fixed-desc">_태그</span>
+        
+      </div>
+    </div>
+  </div>  
+  
+  <div class="post-comment">    
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "XXXX" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>    
+  </div>
+  
+  <div class="recommend-articles">
+    다음으로 읽을만한 글입니다.
+    <ul>
+      
+      <li>
+        <a href="https://jordi02183.github.io/post/03.stactqueue/" rel="prev">
+          <span>3.스택과 큐 (Stack&amp;Queue)</span>
+        </a>
+      </li>
+      
+      
+      <li>
+        <a href="https://jordi02183.github.io/post/05.heap/" rel="next">
+          <span>5.우선순위 큐와 힙 (Prior Queue&amp;Heap)</span>
+        </a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="go-top">
+  <a href="#" class="go-top-button">
+    <i class="fa fa-angle-double-up"></i>
+    <span>위로</span>
+  </a>
+</div>
+<footer class="footer">
+  COPYRIGHT (C) <a href="https://blog.lulab.net">DONGGEUN,BANG (LUBANG).</a><br />
+  ALL RIGHTS RESERVED.
+</footer>
+</body>
+</html>
+

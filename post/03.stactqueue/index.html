@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.스택과 큐 (Stack&amp;Queue)  | 전체글보기</title>
+  <meta name="description" content=" '3.스택과 큐 (Stack&amp;Queue)'을 한 번 살펴보세요.">
+  <meta property="og:title" content="3.스택과 큐 (Stack&amp;Queue)">
+  
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2020-05-14">
+  
+  <meta property="og:description" content=" '3.스택과 큐 (Stack&amp;Queue)'을 한 번 살펴보세요.">
+  <meta property="og:url" content="https://jordi02183.github.io/post/03.stactqueue/">
+  <meta property="og:site_name" content="전체글보기">
+  
+  <meta property="og:image" content="https://jordi02183.github.io/images/StackQueue.png">
+  
+  
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="canonical" href="https://jordi02183.github.io/post/03.stactqueue/">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/agate.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXX-X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-XXXXXXXX-X');
+  </script>
+  
+  
+  <script type="text/javascript">
+  function toggle_visibility(id) {
+    var e = document.getElementById(id);
+    if (e.className === 'menu')
+      e.className = 'menu hidden';
+    else
+      e.className = 'menu';
+  }
+  </script>
+</head>
+<body>
+  <div class="navbar">    
+    <div class="logo">
+      <a href="/">
+        <img src="/images/logo.png" height="42px" />
+      </a>
+    </div>
+    <div class="burger">
+      <button onclick="toggle_visibility('menu')">
+        <i class="fa fa-bars" aria-hidden="true"></i> 메뉴
+      </button>
+    </div>
+    <div id="menu" class="menu hidden">
+      <ul>
+        <li><a href="/">전체글보기</a></li>
+        <li><a href="/categories">카테고리</a></li>
+        <li><a href="/tags">태그</a></li>
+        <li><a href="/projects">포트폴리오</a></li>        
+      </ul>
+      <input class="search" id="search-input" type="search" placeholder="검색어" value="">
+    </div>
+  </div>
+  <div class="container">    
+
+<div class="post">
+  <div class="post-title">
+    <a href="https://jordi02183.github.io/post/03.stactqueue/">
+      <img src="/images/post-title-icon.png" />
+      <div class="post-meta">
+        <time>2020년 5월 14일 14시 10분</time>
+        <h1>3.스택과 큐 (Stack&amp;Queue)</h1>
+      </div>
+    </a>
+  </div>
+  <div class="post-toc">
+    <span class="title">차례</span>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#스택큐stackqueue">스택&amp;큐(Stack&amp;Queue)</a></li>
+    <li><a href="#스택--큐-코드-실습">스택 &amp; 큐 코드 실습</a></li>
+  </ul>
+</nav>
+  </div>
+  <section class="post-content">
+    <h2 id="스택큐stackqueue">스택&amp;큐(Stack&amp;Queue)</h2>
+<p>스택은 대표적인 후입선출, 큐는 대표적인 선입선출 구조를 가진 자료구조이다.</p>
+<figure>
+    <img src="/images/StackQueue.png"/> 
+</figure>
+
+<p>사실 이 큐와 스택이라는 건 리스트 또는 배열을 응용한 선형 구조이기 때문에, 리스트에서 더 응용할 코드랄게 크게 없다. 리스트에서 앞에 붙이고 앞으로 나오는 기능만 만들면 스택이고, 앞에 붙이고 뒤로 나오는 기능만 만들면 큐이고, 그 둘을 동시에 장착할 수도 있다(Deque라고 부른다). 기본 리스트/배열 형식에서 조금씩만 응용하면 된다.​</p>
+<p>다만 이 스택과 큐는 스택/큐의 활용, 또는 스택/큐 기반의 알고리즘으로 들어가면 조금 복잡해지는데, 대표적으로 배열로 구현할 때 공간을 절약할 수 있는 원형 큐, 큐의 삽입, 제거에서 우선순위를 두는 우선순위 큐 등이 있다. 또한 재귀형태를 비재귀로 바꿀 때도 스택과 큐(사실 재귀 자체가 스택 형태로 만들어지는 구조이다..=_=)가 필수적으로 쓰여진다.</p>
+<figure>
+    <img src="/images/RectangularQueue.png"/> 
+</figure>
+
+<h2 id="스택--큐-코드-실습">스택 &amp; 큐 코드 실습</h2>
+<p>생략.</p>
+
+  </section>
+  <div class="share">    
+    <a
+      href="//www.facebook.com/sharer.php?src=bm&u=https%3a%2f%2fjordi02183.github.io%2fpost%2f03.stactqueue%2f&t=3.%ec%8a%a4%ed%83%9d%ea%b3%bc%20%ed%81%90%20%28Stack%26Queue%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-facebook"></i
+    ></a>
+    <a
+      href="//twitter.com/intent/tweet?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f03.stactqueue%2f&text=3.%ec%8a%a4%ed%83%9d%ea%b3%bc%20%ed%81%90%20%28Stack%26Queue%29&tw_p=tweetbutton"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-twitter"></i
+    ></a>
+    <a
+      href="//getpocket.com/edit?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f03.stactqueue%2f&title=3.%ec%8a%a4%ed%83%9d%ea%b3%bc%20%ed%81%90%20%28Stack%26Queue%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-get-pocket"></i
+    ></a>
+    <a
+      href="//plus.google.com/share?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f03.stactqueue%2f"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-google-plus"></i
+    ></a>
+  </div>
+  <div class="post-meta-code">
+    <div class="desc">
+      postAuthorPrefix
+      
+      <a href="mailto:sjc02183@naver.com">ChangHakKim</a>
+      
+      이
+      <span class="highlight">2020년 5월 14일 14시 10분</span> 
+      에 작성한 글입니다.
+    </div>
+    <div class="desc">
+      
+      <div class="desc">
+        <span class="fixed-desc">_카테고리</span>
+        
+        
+        <a href="https://jordi02183.github.io//categories/data-structure">#Data Structure</a>
+        
+      </div>
+      
+      <div class="desc">
+        <span class="fixed-desc">_태그</span>
+        
+      </div>
+    </div>
+  </div>  
+  
+  <div class="post-comment">    
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "XXXX" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>    
+  </div>
+  
+  <div class="recommend-articles">
+    다음으로 읽을만한 글입니다.
+    <ul>
+      
+      <li>
+        <a href="https://jordi02183.github.io/post/02.list/" rel="prev">
+          <span>2.리스트 (List)</span>
+        </a>
+      </li>
+      
+      
+      <li>
+        <a href="https://jordi02183.github.io/post/04.tree/" rel="next">
+          <span>4.트리와 트리의 순회 (Tree&amp;Traverse)</span>
+        </a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="go-top">
+  <a href="#" class="go-top-button">
+    <i class="fa fa-angle-double-up"></i>
+    <span>위로</span>
+  </a>
+</div>
+<footer class="footer">
+  COPYRIGHT (C) <a href="https://blog.lulab.net">DONGGEUN,BANG (LUBANG).</a><br />
+  ALL RIGHTS RESERVED.
+</footer>
+</body>
+</html>
+

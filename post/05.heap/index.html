@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.우선순위 큐와 힙 (Prior Queue&amp;Heap)  | 전체글보기</title>
+  <meta name="description" content=" '5.우선순위 큐와 힙 (Prior Queue&amp;Heap)'을 한 번 살펴보세요.">
+  <meta property="og:title" content="5.우선순위 큐와 힙 (Prior Queue&amp;Heap)">
+  
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2020-05-14">
+  
+  <meta property="og:description" content=" '5.우선순위 큐와 힙 (Prior Queue&amp;Heap)'을 한 번 살펴보세요.">
+  <meta property="og:url" content="https://jordi02183.github.io/post/05.heap/">
+  <meta property="og:site_name" content="전체글보기">
+  
+  <meta property="og:image" content="https://jordi02183.github.io/images/heap.png">
+  
+  
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="canonical" href="https://jordi02183.github.io/post/05.heap/">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/agate.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXX-X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-XXXXXXXX-X');
+  </script>
+  
+  
+  <script type="text/javascript">
+  function toggle_visibility(id) {
+    var e = document.getElementById(id);
+    if (e.className === 'menu')
+      e.className = 'menu hidden';
+    else
+      e.className = 'menu';
+  }
+  </script>
+</head>
+<body>
+  <div class="navbar">    
+    <div class="logo">
+      <a href="/">
+        <img src="/images/logo.png" height="42px" />
+      </a>
+    </div>
+    <div class="burger">
+      <button onclick="toggle_visibility('menu')">
+        <i class="fa fa-bars" aria-hidden="true"></i> 메뉴
+      </button>
+    </div>
+    <div id="menu" class="menu hidden">
+      <ul>
+        <li><a href="/">전체글보기</a></li>
+        <li><a href="/categories">카테고리</a></li>
+        <li><a href="/tags">태그</a></li>
+        <li><a href="/projects">포트폴리오</a></li>        
+      </ul>
+      <input class="search" id="search-input" type="search" placeholder="검색어" value="">
+    </div>
+  </div>
+  <div class="container">    
+
+<div class="post">
+  <div class="post-title">
+    <a href="https://jordi02183.github.io/post/05.heap/">
+      <img src="/images/post-title-icon.png" />
+      <div class="post-meta">
+        <time>2020년 5월 14일 14시 34분</time>
+        <h1>5.우선순위 큐와 힙 (Prior Queue&amp;Heap)</h1>
+      </div>
+    </a>
+  </div>
+  <div class="post-toc">
+    <span class="title">차례</span>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#우선순위-큐prior-queue">우선순위 큐(Prior Queue)</a></li>
+    <li><a href="#힙업heap-up과-힙다운heap-down">힙업(Heap up)과 힙다운(Heap down)</a></li>
+    <li><a href="#힙을-이용한-우선순위-큐의-구현">힙을 이용한 우선순위 큐의 구현</a></li>
+  </ul>
+</nav>
+  </div>
+  <section class="post-content">
+    <h2 id="우선순위-큐prior-queue">우선순위 큐(Prior Queue)</h2>
+<p>우선순위 큐는 추상자료형의 하나로 일반적인 큐와는 다른 특징을 가진다. 큐는 단순히 먼저 들어간 데이터가 먼저 나오는(선입선출) 특성을 가지고 있지만, 우선순위 큐는 사용자(프로그래머)가 우선순위를 지정할 수 있다.</p>
+<p>이 우선순위 큐를 구현하는 것은 기존의 재료였던 배열, 연결리스트에 이어 힙(heap)을 사용할 수 있다. 힙이 왜 필요할까? 배열과 연결리스트로 우선순위 큐를 구현할 때의 단점을 알아보자.</p>
+<ul>
+<li>배열로 구현할 경우 데이터 삽입 및 삭제과정에서 데이터를 한 칸씩 밀어야 하는 연산을 반복해야 한다.(O(n))</li>
+<li>연결리스트로 구현할 경우에도 첫번째 노드부터 마지막 노드까지 저장된 데이터와 우선순위를 비교해야 한다.(O(n))(사실 이는 이진 탐색을 이용하면 해결되는 문제이지만, 리스트 형태에서 중간값을 찾기가 힘들기 때문에 배열과 다르게 이진 탐색을 이용할 수 없다.)</li>
+</ul>
+<p>이러한 두 가지의 방법을 해결한 것이 바로 힙이라는 자료구조다.
+힙은 무엇일까? 힙은 트리, 그 중에서도 완전 이진 트리이다. 그 중에서도, 완전하게 졍렬되지 않고, 느슨하게 정렬된 트리이다. 느슨하게 정렬되었다는 것이 뭘까?</p>
+<ul>
+<li>힙순서(느슨한 정렬) : 루트를 제외한 모든 내부노드 v는 자신의 부모보다 작거나 같다(크거나 같다). 모든 내부노드는 자신의 부모와의 관계만 신경쓰면 되고, 자매들(sibling)은 신경쓰지 않는다.</li>
+</ul>
+<figure>
+    <img src="/images/heap.png"/> 
+</figure>
+
+<p>여기서 알 수 있는 힙의 중요한 사실은, 루트 노드는 무조건 힙의 최솟값(혹은 최댓값)이라는 것이다. 다시 말해서, 힙의 구조만 유지하면 가장 큰, 혹은 가장 작은, 혹은 가장 못생긴(&hellip;) 노드를 찾는 우선순위 큐에서의 시간 복잡도를 O(n)에서 O(log n)으로 줄일 수 있다는 것!</p>
+<h2 id="힙업heap-up과-힙다운heap-down">힙업(Heap up)과 힙다운(Heap down)</h2>
+<p>그렇다면 힙의 구조는 어떻게 유지하는 것이 좋을까? 힙은 부모와만 비교를 하고, 자매와 비교하는 과정을 거치지 않기 때문에, 힙의 추가/제거는 힙업과 힙다운 과정이 필요하다.</p>
+<p><figure>
+    <img src="/images/addheap.png"/> 
+</figure>
+
+추가할 때는 일단 마지막 노드에 추가한 뒤 부모 노드와 비교하면서 오르는 과정을 거치면 된다.(아래 코드 upHeap부분 참조)</p>
+<p><figure>
+    <img src="/images/removeheap.png"/> 
+</figure>
+
+보통 루트 노드를 삭제하는 방법을 통해 삭제를 진행한다. 루트 노드를 삭제한다는 가정을 하면, 마지막 노드를 루트 노드와 바꾼 이후 마지막 노드 자리에 있는 루트 노드를 삭제하고, 루트 노드에 들어가있는 애를 자식과 비교하면서 내려가면 끝이다. O(log n)이 걸리는 매우 간단한 과정이다.(downHeap부분 참조)</p>
+<h2 id="힙을-이용한-우선순위-큐의-구현">힙을 이용한 우선순위 큐의 구현</h2>
+<p>배열과 연결리스트로 우선순위 큐를 구현하는 과정은 연결리스트와 배열 ADT를 구현할 수 있다면 간단하게 할 수 있기 때문에 여기서는 힙을 통해서 우선순위 큐를 만드는 과정만 서술하겠다.</p>
+<p>힙은 보통 배열로 만들어진 이진 트리로 구현한다. 왜냐하면 배열로 구현하는 것이 머리가 아프지 않고(연결 리스트로 구현할 경우 새로운 노드를 더할 때 힙의 마지막 위치를 찾는 것이 귀찮다.), 완전이진트리라서 공간의 낭비가 적기 때문이다. 여기서 구현한 배열의 트리는 일반 트리에서도 사용할 수 있다.</p>
+<p>여기서 배열을 통해 구현하는 힙은 index 0을 사용하지 않는다. 왜? 부모 노드를 찾을때 나누기 2, 자식 노드를 찾을때는 곱하기 2, 거기에 +1만 더 해주면 되기 때문.(내 뇌를 괴롭히느니, 인덱스 0을 버리겠다는 마인드)</p>
+<p><div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">103
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">104
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">105
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">106
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">107
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">108
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">109
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">110
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+
+<span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> tagHeapNode {
+	<span style="color:#66d9ef">int</span> element;
+}HeapNode;<span style="color:#75715e">//배열로 선언
+</span><span style="color:#75715e"></span>		  <span style="color:#75715e">//자식의 주소는 2k,2k+1에 존재.(index는 1부터 시작)
+</span><span style="color:#75715e"></span>		  <span style="color:#75715e">//부모의 주소는 2로 나누면 됨.(index 0을 사용하지 않기 때문에 약간 쉬워짐)
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> tagHead {
+	HeapNode <span style="color:#f92672">*</span>Nodes;
+	<span style="color:#66d9ef">int</span> Capacity;
+	<span style="color:#66d9ef">int</span> UsedSize;
+}Heap;
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">upHeap</span>(Heap <span style="color:#f92672">*</span>H, <span style="color:#66d9ef">int</span> n) {
+	<span style="color:#66d9ef">if</span> (H<span style="color:#f92672">-&gt;</span>Nodes[n <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>].element <span style="color:#f92672">&gt;=</span> H<span style="color:#f92672">-&gt;</span>Nodes[n].element <span style="color:#f92672">||</span> n <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>) {
+		<span style="color:#66d9ef">return</span>;
+	}
+	<span style="color:#66d9ef">else</span> 
+	{
+		<span style="color:#66d9ef">int</span> tmp <span style="color:#f92672">=</span> H<span style="color:#f92672">-&gt;</span>Nodes[n <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>].element;
+		H<span style="color:#f92672">-&gt;</span>Nodes[n <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>].element <span style="color:#f92672">=</span> H<span style="color:#f92672">-&gt;</span>Nodes[n].element;
+		H<span style="color:#f92672">-&gt;</span>Nodes[n].element <span style="color:#f92672">=</span> tmp;
+		upHeap(H, n <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>);
+	}
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">downHeap</span>(Heap <span style="color:#f92672">*</span>H, <span style="color:#66d9ef">int</span> parent) {
+	<span style="color:#66d9ef">int</span> childNode;
+	<span style="color:#66d9ef">if</span> (parent<span style="color:#f92672">*</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">&gt;</span> H<span style="color:#f92672">-&gt;</span>UsedSize) <span style="color:#66d9ef">return</span>;<span style="color:#75715e">//양쪽 다 없을때
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (parent<span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&gt;</span> H<span style="color:#f92672">-&gt;</span>UsedSize) {
+		childNode <span style="color:#f92672">=</span> parent <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>;
+	}<span style="color:#75715e">//왼쪽 child만 있을때
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (H<span style="color:#f92672">-&gt;</span>Nodes[parent <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>].element <span style="color:#f92672">&gt;</span> H<span style="color:#f92672">-&gt;</span>Nodes[parent <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>].element) {
+		childNode <span style="color:#f92672">=</span> parent <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>;
+	}
+	<span style="color:#66d9ef">else</span> childNode <span style="color:#f92672">=</span> parent <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;<span style="color:#75715e">//큰게 childNode
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> (H<span style="color:#f92672">-&gt;</span>Nodes[childNode].element <span style="color:#f92672">&gt;</span> H<span style="color:#f92672">-&gt;</span>Nodes[parent].element)
+	{
+		<span style="color:#66d9ef">int</span> tmp <span style="color:#f92672">=</span> H<span style="color:#f92672">-&gt;</span>Nodes[childNode].element;
+		H<span style="color:#f92672">-&gt;</span>Nodes[childNode].element <span style="color:#f92672">=</span> H<span style="color:#f92672">-&gt;</span>Nodes[parent].element;
+		H<span style="color:#f92672">-&gt;</span>Nodes[parent].element <span style="color:#f92672">=</span> tmp;
+	}
+	downHeap(H, childNode);
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">insertHeap</span>(Heap <span style="color:#f92672">*</span>H, <span style="color:#66d9ef">int</span> element) {
+	H<span style="color:#f92672">-&gt;</span>UsedSize<span style="color:#f92672">++</span>;
+	<span style="color:#66d9ef">if</span> (H<span style="color:#f92672">-&gt;</span>Capacity <span style="color:#f92672">&gt;=</span> H<span style="color:#f92672">-&gt;</span>UsedSize) {
+		H<span style="color:#f92672">-&gt;</span>Capacity <span style="color:#f92672">*=</span> <span style="color:#ae81ff">2</span>;
+		H<span style="color:#f92672">-&gt;</span>Nodes <span style="color:#f92672">=</span> (HeapNode<span style="color:#f92672">*</span>)realloc(H<span style="color:#f92672">-&gt;</span>Nodes,<span style="color:#66d9ef">sizeof</span>(HeapNode)<span style="color:#f92672">*</span>H<span style="color:#f92672">-&gt;</span>Capacity);
+	}<span style="color:#75715e">//capacity를 초과할때 메모리 재설정
+</span><span style="color:#75715e"></span>	H<span style="color:#f92672">-&gt;</span>Nodes[H<span style="color:#f92672">-&gt;</span>UsedSize].element <span style="color:#f92672">=</span> element;
+	upHeap(H,H<span style="color:#f92672">-&gt;</span>UsedSize);
+	printf(<span style="color:#e6db74">&#34;0</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+}
+
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">removeHeap</span>(Heap <span style="color:#f92672">*</span>H) {
+	<span style="color:#66d9ef">if</span> (H<span style="color:#f92672">-&gt;</span>UsedSize <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>) {
+		printf(<span style="color:#e6db74">&#34;삭제할 노드가 없습니다.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+		<span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+	}
+	<span style="color:#66d9ef">int</span> key <span style="color:#f92672">=</span> H<span style="color:#f92672">-&gt;</span>Nodes[<span style="color:#ae81ff">1</span>].element;
+	H<span style="color:#f92672">-&gt;</span>Nodes[<span style="color:#ae81ff">1</span>].element <span style="color:#f92672">=</span> H<span style="color:#f92672">-&gt;</span>Nodes[H<span style="color:#f92672">-&gt;</span>UsedSize].element;
+	H<span style="color:#f92672">-&gt;</span>UsedSize<span style="color:#f92672">--</span>;
+	<span style="color:#75715e">//	H-&gt;Nodes[H-&gt;UsedSize].element = -1;//솔직히 안해도 상관없음.(UsedSize가 있기 때문!)
+</span><span style="color:#75715e"></span>	downHeap(H, <span style="color:#ae81ff">1</span>);
+	<span style="color:#66d9ef">return</span> key;
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">printHeap</span>(Heap <span style="color:#f92672">*</span>H) {
+	<span style="color:#66d9ef">if</span> (H<span style="color:#f92672">-&gt;</span>UsedSize <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1</span>)
+	{
+	<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&lt;=</span> H<span style="color:#f92672">-&gt;</span>UsedSize; i<span style="color:#f92672">++</span>) {
+		printf(<span style="color:#e6db74">&#34; %d&#34;</span>, H<span style="color:#f92672">-&gt;</span>Nodes[i].element);
+	}
+	printf(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+	}
+}
+
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+{
+	<span style="color:#66d9ef">int</span> i;
+	<span style="color:#66d9ef">char</span> ch;
+	Heap<span style="color:#f92672">*</span> myHeap <span style="color:#f92672">=</span> (Heap<span style="color:#f92672">*</span>)malloc(<span style="color:#66d9ef">sizeof</span>(Heap));
+	myHeap<span style="color:#f92672">-&gt;</span>Capacity <span style="color:#f92672">=</span> <span style="color:#ae81ff">128</span>; <span style="color:#75715e">//최대 크기 100이지만, 2배로 늘리는 작업 위해 128로 설정
+</span><span style="color:#75715e"></span>	myHeap<span style="color:#f92672">-&gt;</span>UsedSize <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;<span style="color:#75715e">//0번 인덱스는 사용하지 않음
+</span><span style="color:#75715e"></span>	myHeap<span style="color:#f92672">-&gt;</span>Nodes <span style="color:#f92672">=</span> (HeapNode<span style="color:#f92672">*</span>)calloc(myHeap<span style="color:#f92672">-&gt;</span>Capacity, <span style="color:#66d9ef">sizeof</span>(HeapNode));
+	<span style="color:#75715e">//힙 초기화
+</span><span style="color:#75715e"></span>	scanf(<span style="color:#e6db74">&#34;%c&#34;</span>, <span style="color:#f92672">&amp;</span>ch);
+	<span style="color:#66d9ef">while</span> (ch <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;q&#39;</span>) {
+		<span style="color:#66d9ef">if</span> (ch <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;i&#39;</span>) {
+			<span style="color:#66d9ef">int</span> num;
+			scanf(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#f92672">&amp;</span>num);
+			insertHeap(myHeap, num);
+		}
+		<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (ch <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;d&#39;</span>) {
+			<span style="color:#66d9ef">int</span> num <span style="color:#f92672">=</span> removeHeap(myHeap);
+			printf(<span style="color:#e6db74">&#34;%d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, num);
+		}
+		<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (ch <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;p&#39;</span>) {
+			printHeap(myHeap);
+		}
+		scanf(<span style="color:#e6db74">&#34;%c&#34;</span>, <span style="color:#f92672">&amp;</span>ch);
+	}
+	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}</code></pre></td></tr></table>
+</div>
+</div>
+힙을 만들었으니, 힙 구조로 우선순위 큐를 구현하면 된다.</p>
+<p>-&gt; 여기서 우선순위 큐는, 추상적인 개념이고, 그 추상적인 개념을 구현하는 것이 힙이라고 생각하는 것이 포인트다.</p>
+
+  </section>
+  <div class="share">    
+    <a
+      href="//www.facebook.com/sharer.php?src=bm&u=https%3a%2f%2fjordi02183.github.io%2fpost%2f05.heap%2f&t=5.%ec%9a%b0%ec%84%a0%ec%88%9c%ec%9c%84%20%ed%81%90%ec%99%80%20%ed%9e%99%20%28Prior%20Queue%26Heap%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-facebook"></i
+    ></a>
+    <a
+      href="//twitter.com/intent/tweet?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f05.heap%2f&text=5.%ec%9a%b0%ec%84%a0%ec%88%9c%ec%9c%84%20%ed%81%90%ec%99%80%20%ed%9e%99%20%28Prior%20Queue%26Heap%29&tw_p=tweetbutton"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-twitter"></i
+    ></a>
+    <a
+      href="//getpocket.com/edit?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f05.heap%2f&title=5.%ec%9a%b0%ec%84%a0%ec%88%9c%ec%9c%84%20%ed%81%90%ec%99%80%20%ed%9e%99%20%28Prior%20Queue%26Heap%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-get-pocket"></i
+    ></a>
+    <a
+      href="//plus.google.com/share?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f05.heap%2f"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-google-plus"></i
+    ></a>
+  </div>
+  <div class="post-meta-code">
+    <div class="desc">
+      postAuthorPrefix
+      
+      <a href="mailto:sjc02183@naver.com">ChangHakKim</a>
+      
+      이
+      <span class="highlight">2020년 5월 14일 14시 34분</span> 
+      에 작성한 글입니다.
+    </div>
+    <div class="desc">
+      
+      <div class="desc">
+        <span class="fixed-desc">_카테고리</span>
+        
+        
+        <a href="https://jordi02183.github.io//categories/data-structure">#Data Structure</a>
+        
+      </div>
+      
+      <div class="desc">
+        <span class="fixed-desc">_태그</span>
+        
+      </div>
+    </div>
+  </div>  
+  
+  <div class="post-comment">    
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "XXXX" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>    
+  </div>
+  
+  <div class="recommend-articles">
+    다음으로 읽을만한 글입니다.
+    <ul>
+      
+      <li>
+        <a href="https://jordi02183.github.io/post/04.tree/" rel="prev">
+          <span>4.트리와 트리의 순회 (Tree&amp;Traverse)</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+</div>
+
+<div class="go-top">
+  <a href="#" class="go-top-button">
+    <i class="fa fa-angle-double-up"></i>
+    <span>위로</span>
+  </a>
+</div>
+<footer class="footer">
+  COPYRIGHT (C) <a href="https://blog.lulab.net">DONGGEUN,BANG (LUBANG).</a><br />
+  ALL RIGHTS RESERVED.
+</footer>
+</body>
+</html>
+

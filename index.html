@@ -74,18 +74,133 @@
 
   <div class="post">
   <div class="post-title">
-    <a href="https://jordi02183.github.io/post/testpage/" title="빅오(Big-Oh)와 시간복잡도(Time-Complexity)">
+    <a href="https://jordi02183.github.io/post/05.heap/" title="5.우선순위 큐와 힙 (Prior Queue&amp;Heap)">
       <img src="/images/post-title-icon.png" />
       <div class="post-meta">
-        <time>2020년 5월 11일 14시 46분</time>
-        <h1>빅오(Big-Oh)와 시간복잡도(Time-Complexity)</h1>
+        <time>2020년 5월 14일 14시 34분</time>
+        <h1>5.우선순위 큐와 힙 (Prior Queue&amp;Heap)</h1>
       </div>
     </a>
   </div>
   
   <div class="cover-image">
-    <a href="https://jordi02183.github.io/post/testpage/" title="빅오(Big-Oh)와 시간복잡도(Time-Complexity)">
-      <img src="https://postfiles.pstatic.net/MjAxOTEyMjVfMjMx/MDAxNTc3MjQ3NzIzNjEw.PoxRjY8gBkBphRIPe1GtQg5Xsn5mNq6zE5O2YFtIuOgg.4if3jNQOwxSNJeuvMiFzw66V8mqYvbTXrx5SnyWgEQ8g.PNG.sjc02183/image.png?type=w773" />
+    <a href="https://jordi02183.github.io/post/05.heap/" title="5.우선순위 큐와 힙 (Prior Queue&amp;Heap)">
+      <img src="/images/heap.png" />
+    </a>
+  </div>
+  
+  <div>
+    우선순위 큐(Prior Queue) 우선순위 큐는 추상자료형의 하나로 일반적인 큐와는 다른 특징을 가진다. 큐는 단순히 먼저 들어간 데이터가 먼저 나오는(선입선출) 특성을 가지고 있지만, 우선순위 큐는 사용자(프로그래머)가 우선순위를 지정할 수 있다.
+이 우선순위 큐를 구현하는 것은 기존의 재료였던 배열, 연결리스트에 이어 힙(heap)을 사용할 수 있다. 힙이 왜 필요할까? 배열과 연결리스트로 우선순위 큐를 구현할 때의 단점을 알아보자.
+ 배열로 구현할 경우 데이터 삽입 및 삭제과정에서 데이터를 한 칸씩 밀어야 하는 연산을 반복해야 한다.(O(n)) 연결리스트로 구현할 경우에도 첫번째 노드부터 마지막 노드까지 저장된 데이터와 우선순위를 비교해야 한다.
+    
+    <a href="/post/05.heap/" class="summary-more">더보기</a>
+    
+  </div>
+</div>
+
+  <hr class="summary-sep" />
+
+  <div class="post">
+  <div class="post-title">
+    <a href="https://jordi02183.github.io/post/04.tree/" title="4.트리와 트리의 순회 (Tree&amp;Traverse)">
+      <img src="/images/post-title-icon.png" />
+      <div class="post-meta">
+        <time>2020년 5월 14일 14시 20분</time>
+        <h1>4.트리와 트리의 순회 (Tree&amp;Traverse)</h1>
+      </div>
+    </a>
+  </div>
+  
+  <div class="cover-image">
+    <a href="https://jordi02183.github.io/post/04.tree/" title="4.트리와 트리의 순회 (Tree&amp;Traverse)">
+      <img src="/images/Tree.png" />
+    </a>
+  </div>
+  
+  <div>
+    트리(Tree) 트리는 첫 번째로 경험할 수 있는, 가장 간단한 비선형 자료구조이다. 트리는 하나의 Root와 0개 이상의 child로 이루어진 노드로 이루어진, 거꾸로 된 나무(tree)구조이다.
+트리의 특징
+ 트리는 하나의 루트 노드를 갖는다. 루트 노드는 0개 이상의 자식 노드를 갖고 있다. 그 자식 노드 또한 0개 이상의 자식 노드를 갖고 있고, 이는 반복적으로 정의된다. 노드(node)들과 노드들을 연결하는 간선(edge)들로 구성되어 있다. 트리에는 사이클(cycle)이 존재할 수 없다. 노드들은 특정 순서로 나열될 수도 있고 그럴 수 없을 수도 있다.
+    
+    <a href="/post/04.tree/" class="summary-more">더보기</a>
+    
+  </div>
+</div>
+
+  <hr class="summary-sep" />
+
+  <div class="post">
+  <div class="post-title">
+    <a href="https://jordi02183.github.io/post/03.stactqueue/" title="3.스택과 큐 (Stack&amp;Queue)">
+      <img src="/images/post-title-icon.png" />
+      <div class="post-meta">
+        <time>2020년 5월 14일 14시 10분</time>
+        <h1>3.스택과 큐 (Stack&amp;Queue)</h1>
+      </div>
+    </a>
+  </div>
+  
+  <div class="cover-image">
+    <a href="https://jordi02183.github.io/post/03.stactqueue/" title="3.스택과 큐 (Stack&amp;Queue)">
+      <img src="/images/StackQueue.png" />
+    </a>
+  </div>
+  
+  <div>
+    스택&amp;큐(Stack&amp;Queue) 스택은 대표적인 후입선출, 큐는 대표적인 선입선출 구조를 가진 자료구조이다.
+  사실 이 큐와 스택이라는 건 리스트 또는 배열을 응용한 선형 구조이기 때문에, 리스트에서 더 응용할 코드랄게 크게 없다. 리스트에서 앞에 붙이고 앞으로 나오는 기능만 만들면 스택이고, 앞에 붙이고 뒤로 나오는 기능만 만들면 큐이고, 그 둘을 동시에 장착할 수도 있다(Deque라고 부른다). 기본 리스트/배열 형식에서 조금씩만 응용하면 된다.​
+다만 이 스택과 큐는 스택/큐의 활용, 또는 스택/큐 기반의 알고리즘으로 들어가면 조금 복잡해지는데, 대표적으로 배열로 구현할 때 공간을 절약할 수 있는 원형 큐, 큐의 삽입, 제거에서 우선순위를 두는 우선순위 큐 등이 있다.
+    
+    <a href="/post/03.stactqueue/" class="summary-more">더보기</a>
+    
+  </div>
+</div>
+
+  <hr class="summary-sep" />
+
+  <div class="post">
+  <div class="post-title">
+    <a href="https://jordi02183.github.io/post/02.list/" title="2.리스트 (List)">
+      <img src="/images/post-title-icon.png" />
+      <div class="post-meta">
+        <time>2020년 5월 13일 15시 46분</time>
+        <h1>2.리스트 (List)</h1>
+      </div>
+    </a>
+  </div>
+  
+  <div class="cover-image">
+    <a href="https://jordi02183.github.io/post/02.list/" title="2.리스트 (List)">
+      <img src="/images/list.png" />
+    </a>
+  </div>
+  
+  <div>
+    소개 자료구조의 기본이라고 할 수 있는 리스트는 포인터와 구조체를 다시 한번 이해하는데 큰 도움이 되면서, 앞으로 작성할 수많은 자료구조의 기본이 되기 때문에 꼭 한번은 본인의 손으로 만들어 보는 것을 추천한다.
+리스트는 다른 나중에 배울 Stack, Queue, Tree, Graph 등과 같은 다른 자료구조 구현에 활용될 기초 자료구조이다. 자료를 순서대로 한 줄로 저장하는 자료구조. &hellip; 제일 처음 데이터를 가리켜서 Head라고 하고, 제일 마지막 데이터를 가리켜서 Tail이라고 한다. 리스트는 크게 배열(Array) 리스트와 연결(Linked) list로 나눌 수 있다.
+    
+    <a href="/post/02.list/" class="summary-more">더보기</a>
+    
+  </div>
+</div>
+
+  <hr class="summary-sep" />
+
+  <div class="post">
+  <div class="post-title">
+    <a href="https://jordi02183.github.io/post/01.bigo/" title="1.빅오(Big-Oh)와 시간복잡도(Time-Complexity)">
+      <img src="/images/post-title-icon.png" />
+      <div class="post-meta">
+        <time>2020년 5월 11일 14시 46분</time>
+        <h1>1.빅오(Big-Oh)와 시간복잡도(Time-Complexity)</h1>
+      </div>
+    </a>
+  </div>
+  
+  <div class="cover-image">
+    <a href="https://jordi02183.github.io/post/01.bigo/" title="1.빅오(Big-Oh)와 시간복잡도(Time-Complexity)">
+      <img src="/images/bigO.png" />
     </a>
   </div>
   
@@ -96,7 +211,7 @@
   을 좋은 알고리즘이라고 생각할 수 있다. 실제로 데이터구조와 알고리즘에 대한 공부는 이 분석 방법에 대한 배경지식 없이는 무의미하다고 할 수 있다. 실행시간이 빠르더라도 기억장소 요구량이 크거나, 기억장소 요구량은 많지 않지만 실행시간이 느리다면 좋은 프로그램이라 할 수 없다.
 하지만 기억장치 제조기술이 눈부시게 발전하면서 기억장치 제조기술 발전과 기억장치 값 하락이 맞물려 기억장소 활용법에 대해서는 어느정도 관대해지는 경향이 있어 최근의 알고리즘은 실행시간을 줄이는 것을 위주로 하고 있고, Dynamic Programming(다이나믹 프로그래밍)같이 공간을 마구 사용해서 시간복잡도를 줄이는 변태적인 방법까지 사용하고 있다.
     
-    <a href="/post/testpage/" class="summary-more">더보기</a>
+    <a href="/post/01.bigo/" class="summary-more">더보기</a>
     
   </div>
 </div>

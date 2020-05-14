@@ -15,7 +15,7 @@ img {
 
 /* Navbar */
 .navbar {
-  height: 80px;
+  height: 50px;
   background: white;
   padding: 8px 16px 4px 16px;
   border-bottom: #eeeeee solid 1px;
@@ -38,7 +38,7 @@ img {
 }
 .navbar > .menu > ul > li {
   display: inline-block;
-  padding: 0px 20px 0px 20px;
+  padding: 5px 20px 0px 20px;
   font-size: 1.35em;
 }
 .navbar > .menu > ul > li > a {
