@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8.해시 테이블 (Hash Table)  | 전체글보기</title>
+  <meta name="description" content=" '8.해시 테이블 (Hash Table)'을 한 번 살펴보세요.">
+  <meta property="og:title" content="8.해시 테이블 (Hash Table)">
+  
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2020-05-14">
+  
+  <meta property="og:description" content=" '8.해시 테이블 (Hash Table)'을 한 번 살펴보세요.">
+  <meta property="og:url" content="https://jordi02183.github.io/post/08.hashtable/">
+  <meta property="og:site_name" content="전체글보기">
+  
+  <meta property="og:image" content="https://jordi02183.github.io/images/hash2.png">
+  
+  
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="canonical" href="https://jordi02183.github.io/post/08.hashtable/">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/agate.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXX-X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-XXXXXXXX-X');
+  </script>
+  
+  
+  <script type="text/javascript">
+  function toggle_visibility(id) {
+    var e = document.getElementById(id);
+    if (e.className === 'menu')
+      e.className = 'menu hidden';
+    else
+      e.className = 'menu';
+  }
+  </script>
+</head>
+<body>
+  <div class="navbar">    
+    <div class="logo">
+      <a href="/">
+        <img src="/images/logo.png" height="42px" />
+      </a>
+    </div>
+    <div class="burger">
+      <button onclick="toggle_visibility('menu')">
+        <i class="fa fa-bars" aria-hidden="true"></i> 메뉴
+      </button>
+    </div>
+    <div id="menu" class="menu hidden">
+      <ul>
+        <li><a href="/">전체글보기</a></li>
+        <li><a href="/categories">카테고리</a></li>
+        <li><a href="/tags">태그</a></li>
+        <li><a href="/projects">포트폴리오</a></li>        
+      </ul>
+      <input class="search" id="search-input" type="search" placeholder="검색어" value="">
+    </div>
+  </div>
+  <div class="container">    
+
+<div class="post">
+  <div class="post-title">
+    <a href="https://jordi02183.github.io/post/08.hashtable/">
+      <img src="/images/post-title-icon.png" />
+      <div class="post-meta">
+        <time>2020년 5월 14일 17시 00분</time>
+        <h1>8.해시 테이블 (Hash Table)</h1>
+      </div>
+    </a>
+  </div>
+  <div class="post-toc">
+    <span class="title">차례</span>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#해시-테이블">해시 테이블</a></li>
+    <li><a href="#symbol-key">Symbol key</a></li>
+    <li><a href="#해시-충돌과-체이닝hash-collision--chaining">해시 충돌과 체이닝(Hash Collision &amp; Chaining)</a></li>
+    <li><a href="#적재율과-재해싱">적재율과 재해싱</a></li>
+  </ul>
+</nav>
+  </div>
+  <section class="post-content">
+    <h2 id="해시-테이블">해시 테이블</h2>
+<p>해시 테이블은 탐색 과정을 단번에(O(1)) 끝낼 수 있는 마법의 단어장이다. 왜 내가 단어장이라고 설명을 하였을까? 해시 테이블을 설명할 수 있는 가장 간단한 예가 단어장이기 때문이다.</p>
+<p>예를 들어보자. 단어장에 있는 &lsquo;Hashing&rsquo;이라는 단어를 찾는데 얼마의 시간이 걸릴까? 가장 무식한 사람들은 탐색의 과정이니 첫 페이지부터 Hashing이라는 단어가 나올 때까지 첫 페이지부터 단어를 찾아나가면서 O(n) 시간만에 찾을 것이고, 좀 더 똑똑한 사람은 이진 탐색을 사용해 사전의 중간 부분쭘에 있는, 예를 들면 Moonlight 정도의 단어부터 반반으로 나눠가면서 O(logN)의 시간 만에 단어를 찾을 수 있을 것이다.</p>
+<p>하지만 현실에서 우리는 어떻게 하는가? Hashing이라는 단어를 찾을때 우리는 목차를 통해 H가 몇 페이지에 있는지 확인하고, 그 이후 a, s, h 등의 단어가 H 안에서 어느 정도 페이지에 있는 지 확인한 이후 단어를 찾는다. 이는, 이론적으로 모든 단어의 페이지와 페이지의 위치를 안다면 O(1) 시간만에 풀 수 있을 것이다. 이 이론을 컴퓨터에 적용한 것이 바로 해시 함수이다.</p>
+<p>해시 테이블은 연관배열 구조를 이용하여 키(Key)에 결과값(value)를 저장하는 자료구조이다. 모든 값(value)은 키(key)를 이용해 도출할 수 있다. 위의 단어장은 각 단어를 Key로 사용한 예이다.</p>
+<figure>
+    <img src="/images/hash1.png"/> 
+</figure>
+
+<h2 id="symbol-key">Symbol key</h2>
+<p>이런 원리를 이용해 해시 테이블은 탐색, 삭제, 추가 과정에서 모두 O(1)의 시간복잡도를 가지고 있기 때문에 궁극의 자료구조로 손꼽힐만 하다. 하지만 여기서 큰 문제가 생겼으니, 그것은 바로 모든 자료를 그에 걸맞는 자료쌍으로 저장하기에는 저장 용량이 한정되어있다는 것이다. 단어장으로 예를 들자면, Hashing이라는 단어는 334장 왼쪽 5번째 줄, Moonlight라는 글은 665장 오른쪽 3번째 줄에 있다고 단어마다 위치를 죄다 설명하는 단어장을 만든다면, 단어의 위치를 설명하는 목차가 단어장보다 기형적으로 커진 우스운 단어장이 만들어질 것이고, 그 단어장은 아무도 읽지 않을 것이다.</p>
+<p>그를 위해 만든 기술이 바로 Symbol Key를 제작하는 것이다. 단어장으로 따지면 단어장의 Symbol Key은 단어의 가장 앞 단어(들)만 저장하는 것이다.</p>
+<p>예를 들어보자. 우리가 Hashing이라는 단어를 찾고 싶어 단어장을 폈다. H라는 단어가 320쪽부터 시작된다고 인덱스에 작성되어 있는 단어장이 있다. 우리는 320쪽을 바로 피고(O(1)) 거기서부터 탐색을 시작할 수 있을 것이다.(순차 탐색을 사용하든, 이진 탐색을 사용하든..) 만약에 Ha라는 단어가 330쪽부터 시작된다는 것이 기록되어 있다면? 우리는 330쪽부터 시작해(O(1)) 더 빠른 탐색 시간을 얻을 수 있고, Has라는 단어가 333쪽부터 시작된다는 것을 안다면, 더더욱 빠른 탐색 시간을 얻을 수 있는 대신, 슬슬 단어의 인덱스를 저장하는 데에 부담이 갈 것이다.</p>
+<p>이것은 공간을 통해 시간을 절약하는 기법이며, 그 복잡함의 정도는 프로그래머가 시간, 공간 효율성에 따라 조절해야 할 것이다.</p>
+<p>​</p>
+<p>단어장에서 첫 단어를 중심으로 단어를 찾는 것처럼, 해시 테이블은 보통 나머지를 기준으로 숫자를 찾는다. 만약 Index가 1000까지 있는데 분류해야 할 단어가 10000개라면, 10000개의 숫자를 1000으로 나눈 나머지 값을 기준으로 같은 해시 테이블에 정렬시키는 것이다. 그렇다면 1007과 2007의 값을 가지고 있을때, 똑같이 7이라는 index에 저장해야 하지 않는가? 이는 필연적으로 한 장소에 여러 값이 중첩되는 해시 충돌(Hash Collision) 문제를 야기시킨다.</p>
+<p>​</p>
+<h2 id="해시-충돌과-체이닝hash-collision--chaining">해시 충돌과 체이닝(Hash Collision &amp; Chaining)</h2>
+<p><figure>
+    <img src="/images/hash2.png"/> 
+</figure>
+
+나누기를 통해 값을 저장하면, 값이 중복이 될 수 있다는 것은 위에 설명하였다. 다시 말하면 hash_function % size_of_array가 두 가지 이상의 값이 나올 수 있다는 것이다. 그를 해결하는 방법에 따라 여러가지 방법이 존재한다.</p>
+<p>​</p>
+<ol>
+<li>Separate Chaining  방식</li>
+</ol>
+<p>각 해시 테이블에 배열 또는 연결 리스트를 연결하여 리스트 형식으로 값을 저장하는 것이다. 연결 리스트를 통해 구현할 경우 리스트를 통해 탐색하는 과정은 O(n)일 것이고, 리스트를 추가하거나 제거할 때는 O(1) 시간이 소모될 것이다. 이는 사전의 앞 단어 Index만 찾아낸 후 순차 탐색으로 찾아내는 과정과 동일하다. 배열을 통해 구현할 경우에는 이진 탐색을 통해 O(logn)시간이 걸릴 것이다. (개인적으로 해시 테이블의 체이닝이 과도하게 이루어지지 않을 경우에는 배열을 통한 구현이 더 낫고, 체이닝이 과도할 때는 연결 리스트로 구현하는 것이 낫다는 생각이 들긴 한다)</p>
+<ol start="2">
+<li>Open address(개방 주소법) 방식</li>
+</ol>
+<p>개방 주소법 방식은 새로운 자료구조를 박아놓는 대신 기존 해시 테이블의 새로운 주소를 탐사(probe)해서 충돌된 데이터를 입력하는 방식이다. 이에는 균등한 체이닝을 일으키기 위한 방법론이 필요하다. 대부분의 값에 한 번 씩의 체이닝이 일어났다면 한번만 이동하면 끝이지만, 한 곳에 체이닝 현상이 1만번 집중되어서 일어났다면?(cluster 현상) 1만번을 탐색해서 그 이후에 박아넣어야 한다. 또한 공간 효율성 문제도 생각해볼 수 있다. 체이닝이 특정 값에만 집중되어 일어난다면, 그 특정 값의 고정폭만 데이터가 채워져있고 나머지는 자리만 차지하는 잉여가 될 것이다.</p>
+<p>개방 주소법에도 여러 가지 방법론이 존재한다.</p>
+<ol>
+<li>
+<p>Linear Probing(선형 탐사)
+해시 함수로부터 체이닝 현상이 발생했을 때, 주소에서 고정 폭 만큼 이동해서 다음 주소로 이동한다. 문제점은? 당연히 너무 많다. 만약 이동 값이 10인데 10과 20의 index에서 체이닝이 일어난다면? 여전히 충돌이 일어난다.</p>
+</li>
+<li>
+<p>Quadratic probing(제곱 탐사)
+선형 탐사가 특정 고정값만큼 이동하는 데 반해, 제곱 탐사는 이동폭이 제곱으로 늘어난다. 다른 값에 대한 충돌은 크게 줄어들지만, 여전히 같은 값에서의 충돌에서는 문제가 생길 수 있다.</p>
+</li>
+<li>
+<p>Double Hashing(이중 해싱)
+이중 해싱은 제 2의 해시함수를 만들어 그 값만큼을 현재 주소에 연산하여 새 주소를 얻는 방법이다. 충돌시 건너뛰는 너비가 값에 따라 달라지기 때문에 점프 시퀸스가 일정하지 않아 군집화의 문제를 해결할 수 있다.(다만 적절하게 함수를 설정하지 않으면 공간효율이 안드로메다로..)</p>
+</li>
+</ol>
+<ul>
+<li>개방 주소법에서의 갱신
+연결 리스트 또는 배열을 모아놓은 것 뿐인 분리연쇄법과 달리 개방주소법을 사용할 경우 Bucket의 갱신에 각별히 주의를 기울여야 한다. Bucket에서의 한 항목이 삭제될 경우 해싱을 통해 데이터를 찾을 때 이 빈 값 뒤에 데이터가 있는지 없는지 확신할 수 없기 때문이다. 최악의 경우 있지도 않은 데이터를 찾기 위해 빈 데이터를 하염없이 해싱하고 있는 삽질을 반복할 수도 있는 것이다. 다만 해결법은 단순하다. 삭제한 테이블은 빈 값(empty)을 넣는 대신 디폴트 값을 넣어서 비활성(deactivation) 시키면 된다.</li>
+</ul>
+<p>​</p>
+<h2 id="적재율과-재해싱">적재율과 재해싱</h2>
+<ul>
+<li>
+<p>적재율
+주요 작업에 대한 성능을 보장받기를 원한다면 적재율을 적절한 수준으로 관리하는 것이 매우매우 중요하다. 적재율은 보통 현재 데이터의 갯수 n을 테이블의 갯수M으로 나눈 숫자를 의미하며, 보통 적재율을 0.5 미만으로 만족하면 O(1)의 기대시간을 만족하고, 기왕이면 0.75를 넘지 않게 유지하는 것을 권장한다(국형준). n/M이 1이 넘는다면 작동에는 문제가 없지만 시간효율이 비효율적일 수 있다. 또한 개방주소법에서는 당연하게도 n/M이 1을 넘을수가 없다.</p>
+</li>
+<li>
+<p>재해싱
+적재율이 일정 비중 이상 늘어난다면 적재율을 적정한 수준으로 관리하는 것이 중요하다. 원소를 삽입할 때 상승 추이를 감지하고 한계(권장은 0.75)를 초과했을 경우 새 테이블로 옮겨야 한다. 재해싱 테이블의 크기는 원래 크기의 두 배 정도 되면서 소수로 설정하는 것이 권장된다.</p>
+</li>
+</ul>
+<p>해시 테이블 알고리즘은 수학적인 정의만 만족하면 구현은 어렵지 않기 때문에 구현은 패스하겠다.</p>
+
+  </section>
+  <div class="share">    
+    <a
+      href="//www.facebook.com/sharer.php?src=bm&u=https%3a%2f%2fjordi02183.github.io%2fpost%2f08.hashtable%2f&t=8.%ed%95%b4%ec%8b%9c%20%ed%85%8c%ec%9d%b4%eb%b8%94%20%28Hash%20Table%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-facebook"></i
+    ></a>
+    <a
+      href="//twitter.com/intent/tweet?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f08.hashtable%2f&text=8.%ed%95%b4%ec%8b%9c%20%ed%85%8c%ec%9d%b4%eb%b8%94%20%28Hash%20Table%29&tw_p=tweetbutton"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-twitter"></i
+    ></a>
+    <a
+      href="//getpocket.com/edit?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f08.hashtable%2f&title=8.%ed%95%b4%ec%8b%9c%20%ed%85%8c%ec%9d%b4%eb%b8%94%20%28Hash%20Table%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-get-pocket"></i
+    ></a>
+    <a
+      href="//plus.google.com/share?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f08.hashtable%2f"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-google-plus"></i
+    ></a>
+  </div>
+  <div class="post-meta-code">
+    <div class="desc">
+      postAuthorPrefix
+      
+      <a href="mailto:sjc02183@naver.com">ChangHakKim</a>
+      
+      이
+      <span class="highlight">2020년 5월 14일 17시 00분</span> 
+      에 작성한 글입니다.
+    </div>
+    <div class="desc">
+      
+      <div class="desc">
+        <span class="fixed-desc">_카테고리</span>
+        
+        
+        <a href="https://jordi02183.github.io//categories/data-structure">#Data Structure</a>
+        
+      </div>
+      
+      <div class="desc">
+        <span class="fixed-desc">_태그</span>
+        
+      </div>
+    </div>
+  </div>  
+  
+  <div class="post-comment">    
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "XXXX" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>    
+  </div>
+  
+  <div class="recommend-articles">
+    이전/다음글
+    <ul>
+      
+      <li>
+        <a href="https://jordi02183.github.io/post/07.avltree/" rel="prev">
+          <span>7.균형잡힌 트리, AVL 트리 (AVL Tree)</span>
+        </a>
+      </li>
+      
+      
+      <li>
+        <a href="https://jordi02183.github.io/post/09.graph/" rel="next">
+          <span>9.그래프 (Graph)</span>
+        </a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="go-top">
+  <a href="#" class="go-top-button">
+    <i class="fa fa-angle-double-up"></i>
+    <span>위로</span>
+  </a>
+</div>
+<footer class="footer">
+  COPYRIGHT (C) <a href="https://blog.lulab.net">DONGGEUN,BANG (LUBANG).</a><br />
+  ALL RIGHTS RESERVED.
+</footer>
+</body>
+</html>
+

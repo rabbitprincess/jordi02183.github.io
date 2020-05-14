@@ -8,10 +8,62 @@
     <language>ko-KR</language>
     <managingEditor>sjc02183@naver.com (ChangHakKim)</managingEditor>
     <webMaster>sjc02183@naver.com (ChangHakKim)</webMaster>
-    <lastBuildDate>Thu, 14 May 2020 14:34:42 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 14 May 2020 17:11:42 +0900</lastBuildDate>
     
 	<atom:link href="https://jordi02183.github.io/categories/data-structure/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>10.그래프의 순회, 깊이우선탐색/너비우선탐색(DFS,BFS)</title>
+      <link>https://jordi02183.github.io/post/10.dfsbfs/</link>
+      <pubDate>Thu, 14 May 2020 17:11:42 +0900</pubDate>
+      <author>sjc02183@naver.com (ChangHakKim)</author>
+      <guid>https://jordi02183.github.io/post/10.dfsbfs/</guid>
+      <description>그래프의 순회(graph traversal) 그래프의 순회(graph traversal)란 그래프의 모든 정점과 간선을 검사함으로써 그래프를 탐험하는 조직적인 절차를 말한다. 트리의 순회와 크게 다른 점은 없으나, 부모와 자식의 관계가 명확해 부모-&amp;gt;자식으로만 가면 되는 트리와 다르게 그래프는 한번 방문한 곳을 다시 방문하지 않기 위해 체계적이고 조직적인 방식의 순회 처리과정이 필요하다.
+깊이우선탐색(Depth-First Search)   깊이우선탐색은 이진트리에 대한 선위순회와 대응되는 방식의 탐색 유형인데, 선위순회와 마찬가지로 출발지에서 멀어지는 외길 방향으로 진행한다. n개의 정점과 m개의 간선을 가진 그래프의 DFS는 O(n+m)시간이 걸린다.</description>
+    </item>
+    
+    <item>
+      <title>9.그래프 (Graph)</title>
+      <link>https://jordi02183.github.io/post/09.graph/</link>
+      <pubDate>Thu, 14 May 2020 17:06:42 +0900</pubDate>
+      <author>sjc02183@naver.com (ChangHakKim)</author>
+      <guid>https://jordi02183.github.io/post/09.graph/</guid>
+      <description>그래프(graph) 그래프는 이산수학에서 시작되어, 컴퓨터 공학에서 매우 유용하게 쓰이는 추상 자료형이다. 그래프는 vertex와 edge로 구성된 한정된 자료구조를 의미한다. vertex는 정점, edge는 정점과 정점을 연결하는 간선이다.
+실제 우리가 일상에서 접하는 다양한 모델인 지도 모델, 네트워크 모델 등은 모두 그래프를 이용해 추상화할 수 있는 것들이다. 특정 장소에서 얼마나 떨어진 다른 장소들을 선택한다던가, 다른 곳으로 갈 때의 이동 경로를 포함하는 등, 그래프는 정말 끝이 없는 응용이 가능할 정도. 가장 많은 파생개념, 원리, 용어를 가지고 있다(범용성이 넓은 만큼 어렵기도 디지게 어려운 자료구조라는 뜻이다.</description>
+    </item>
+    
+    <item>
+      <title>8.해시 테이블 (Hash Table)</title>
+      <link>https://jordi02183.github.io/post/08.hashtable/</link>
+      <pubDate>Thu, 14 May 2020 17:00:42 +0900</pubDate>
+      <author>sjc02183@naver.com (ChangHakKim)</author>
+      <guid>https://jordi02183.github.io/post/08.hashtable/</guid>
+      <description>해시 테이블 해시 테이블은 탐색 과정을 단번에(O(1)) 끝낼 수 있는 마법의 단어장이다. 왜 내가 단어장이라고 설명을 하였을까? 해시 테이블을 설명할 수 있는 가장 간단한 예가 단어장이기 때문이다.
+예를 들어보자. 단어장에 있는 &amp;lsquo;Hashing&amp;rsquo;이라는 단어를 찾는데 얼마의 시간이 걸릴까? 가장 무식한 사람들은 탐색의 과정이니 첫 페이지부터 Hashing이라는 단어가 나올 때까지 첫 페이지부터 단어를 찾아나가면서 O(n) 시간만에 찾을 것이고, 좀 더 똑똑한 사람은 이진 탐색을 사용해 사전의 중간 부분쭘에 있는, 예를 들면 Moonlight 정도의 단어부터 반반으로 나눠가면서 O(logN)의 시간 만에 단어를 찾을 수 있을 것이다.</description>
+    </item>
+    
+    <item>
+      <title>7.균형잡힌 트리, AVL 트리 (AVL Tree)</title>
+      <link>https://jordi02183.github.io/post/07.avltree/</link>
+      <pubDate>Thu, 14 May 2020 16:46:42 +0900</pubDate>
+      <author>sjc02183@naver.com (ChangHakKim)</author>
+      <guid>https://jordi02183.github.io/post/07.avltree/</guid>
+      <description>불균형 이진 탐색 트리의 문제점 이진 탐색 트리에서 균형잡힌 트리가 왜 중요할까? : 비뚤게 자란 나무가 좋게 보이지 않는것처럼, 추상 자료형인 트리 또한 비뚤게 자라면 문제가 생긴다. 이진 트리 탐색 과정에서의 효율성(O(log n))이 말도 안되게 떨어지고(O(n), 배열로 구현할 경우에는 심지어 공간 낭비도 심해진다.
+  비뚤게 자란 트리의 예
+AVL 트리(Adelson-Velskii/Landis Tree) AVL트리는 Adelson-Velskii와 Landis에 의해 1962년 제안된 이진 균형 트리이다. AVL 트리의 핵심 개념은 왼쪽 서브트리와 오른쪽 서브트리의 높이 차이(Height Defference)를 1 이하로 유지한다는 것이다.</description>
+    </item>
+    
+    <item>
+      <title>6.이진 탐색 트리 (Binary Search Tree)</title>
+      <link>https://jordi02183.github.io/post/06.binarytree/</link>
+      <pubDate>Thu, 14 May 2020 16:30:42 +0900</pubDate>
+      <author>sjc02183@naver.com (ChangHakKim)</author>
+      <guid>https://jordi02183.github.io/post/06.binarytree/</guid>
+      <description>이진 탐색 트리(Binary Search Tree) 이진 탐색 트리(Binary Search Tree)는 내부노드에 키 또는 키와 원소쌍을 저장하는 트리이다. 이진 트리는 다음과 같은 성질을 만족한다.
+ u와 w가 각각 v의 왼쪽,오른쪽 노드일때, key(u) &amp;lt; key(v) &amp;lt;= key(w)가 성립.  위와 같은 특성 덕분에 우리는 중위 순회를 통해 정렬된 값을 얻을 수 있다.
+  이진 탐색 트리 또한 삽입, 탐색, 삭제 세 가지 메소드를 구현해야 하는데, 삽입과 탐색은 아주 쉽게 구현할 수 있지만 삭제가 조금 구현할 때 골치가 아프다.</description>
+    </item>
     
     <item>
       <title>5.우선순위 큐와 힙 (Prior Queue&amp;Heap)</title>

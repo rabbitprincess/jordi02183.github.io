@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10.그래프의 순회, 깊이우선탐색/너비우선탐색(DFS,BFS)  | 전체글보기</title>
+  <meta name="description" content=" '10.그래프의 순회, 깊이우선탐색/너비우선탐색(DFS,BFS)'을 한 번 살펴보세요.">
+  <meta property="og:title" content="10.그래프의 순회, 깊이우선탐색/너비우선탐색(DFS,BFS)">
+  
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2020-05-14">
+  
+  <meta property="og:description" content=" '10.그래프의 순회, 깊이우선탐색/너비우선탐색(DFS,BFS)'을 한 번 살펴보세요.">
+  <meta property="og:url" content="https://jordi02183.github.io/post/10.dfsbfs/">
+  <meta property="og:site_name" content="전체글보기">
+  
+  <meta property="og:image" content="https://jordi02183.github.io/images/graph1.png">
+  
+  
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="canonical" href="https://jordi02183.github.io/post/10.dfsbfs/">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/agate.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXX-X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-XXXXXXXX-X');
+  </script>
+  
+  
+  <script type="text/javascript">
+  function toggle_visibility(id) {
+    var e = document.getElementById(id);
+    if (e.className === 'menu')
+      e.className = 'menu hidden';
+    else
+      e.className = 'menu';
+  }
+  </script>
+</head>
+<body>
+  <div class="navbar">    
+    <div class="logo">
+      <a href="/">
+        <img src="/images/logo.png" height="42px" />
+      </a>
+    </div>
+    <div class="burger">
+      <button onclick="toggle_visibility('menu')">
+        <i class="fa fa-bars" aria-hidden="true"></i> 메뉴
+      </button>
+    </div>
+    <div id="menu" class="menu hidden">
+      <ul>
+        <li><a href="/">전체글보기</a></li>
+        <li><a href="/categories">카테고리</a></li>
+        <li><a href="/tags">태그</a></li>
+        <li><a href="/projects">포트폴리오</a></li>        
+      </ul>
+      <input class="search" id="search-input" type="search" placeholder="검색어" value="">
+    </div>
+  </div>
+  <div class="container">    
+
+<div class="post">
+  <div class="post-title">
+    <a href="https://jordi02183.github.io/post/10.dfsbfs/">
+      <img src="/images/post-title-icon.png" />
+      <div class="post-meta">
+        <time>2020년 5월 14일 17시 11분</time>
+        <h1>10.그래프의 순회, 깊이우선탐색/너비우선탐색(DFS,BFS)</h1>
+      </div>
+    </a>
+  </div>
+  <div class="post-toc">
+    <span class="title">차례</span>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#그래프의-순회graph-traversal">그래프의 순회(graph traversal)</a></li>
+    <li><a href="#깊이우선탐색depth-first-search">깊이우선탐색(Depth-First Search)</a></li>
+    <li><a href="#너비우선탐색breadth-first-search">너비우선탐색(Breadth-First Search)</a></li>
+  </ul>
+</nav>
+  </div>
+  <section class="post-content">
+    <h2 id="그래프의-순회graph-traversal">그래프의 순회(graph traversal)</h2>
+<p>그래프의 순회(graph traversal)란 그래프의 모든 정점과 간선을 검사함으로써 그래프를 탐험하는 조직적인 절차를 말한다. 트리의 순회와 크게 다른 점은 없으나, 부모와 자식의 관계가 명확해 부모-&gt;자식으로만 가면 되는 트리와 다르게 그래프는 한번 방문한 곳을 다시 방문하지 않기 위해 체계적이고 조직적인 방식의 순회 처리과정이 필요하다.</p>
+<h2 id="깊이우선탐색depth-first-search">깊이우선탐색(Depth-First Search)</h2>
+<p><figure>
+    <img src="/images/dfs.png"/> 
+</figure>
+
+깊이우선탐색은 이진트리에 대한 선위순회와 대응되는 방식의 탐색 유형인데, 선위순회와 마찬가지로 출발지에서 멀어지는 외길 방향으로 진행한다. n개의 정점과 m개의 간선을 가진 그래프의 DFS는 O(n+m)시간이 걸린다. DFS는 대부분 재귀를 이용해 구현한다. 아래의 경우에는 정점과 간선에 모두 방문되었다는 마크를 찍었지만, 솔직히 정점에만 찍어도 되긴 한다.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">DepthFirstSearch</span>(Vertex<span style="color:#f92672">*</span> vert) {
+	printf(<span style="color:#e6db74">&#34;%d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,vert<span style="color:#f92672">-&gt;</span>num);
+	vert<span style="color:#f92672">-&gt;</span>fresh <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;<span style="color:#75715e">//정점이 방문되었다는 것을 표시.
+</span><span style="color:#75715e"></span>	Node<span style="color:#f92672">*</span> tmp <span style="color:#f92672">=</span> vert<span style="color:#f92672">-&gt;</span>head;
+	<span style="color:#66d9ef">while</span> (tmp<span style="color:#f92672">-&gt;</span>nextNode <span style="color:#f92672">!=</span> NULL) {
+		tmp <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>nextNode;
+		<span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>edge<span style="color:#f92672">-&gt;</span>fresh <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">continue</span>;
+		<span style="color:#66d9ef">else</span> {
+			tmp<span style="color:#f92672">-&gt;</span>edge<span style="color:#f92672">-&gt;</span>fresh <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;<span style="color:#75715e">//간선이 방문되었다는 것을 표시
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>edge<span style="color:#f92672">-&gt;</span>vert1 <span style="color:#f92672">==</span> vert <span style="color:#f92672">&amp;&amp;</span> tmp<span style="color:#f92672">-&gt;</span>edge<span style="color:#f92672">-&gt;</span>vert2<span style="color:#f92672">-&gt;</span>fresh <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) DepthFirstSearch(tmp<span style="color:#f92672">-&gt;</span>edge<span style="color:#f92672">-&gt;</span>vert2);
+			<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(tmp<span style="color:#f92672">-&gt;</span>edge<span style="color:#f92672">-&gt;</span>vert1<span style="color:#f92672">-&gt;</span>fresh <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) DepthFirstSearch(tmp<span style="color:#f92672">-&gt;</span>edge<span style="color:#f92672">-&gt;</span>vert1);
+		}
+	}
+}</code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="너비우선탐색breadth-first-search">너비우선탐색(Breadth-First Search)</h2>
+<p><figure>
+    <img src="/images/bfs.png"/> 
+</figure>
+
+너비 우선 탐색은 이진트리의 레벨순회와 같은 방법으로 탐색하는 방법이다. m개의 정점과 n개의 간선을 가진 그래프는 DFS와 같이 O(n+m)시간이 걸린다. 위 그림과 같이 BFS는 재귀로 해결할 수 있는 DFS와 달리 한 정점이 가지고 있는 여러 간선을 순서대로 탐색하기 위해 큐 자료구조가 필요하다. 아래의 같은 경우에는 옛날에 짠 코드인데, 도저히 한 개의 배열만으로 진행할 수 없어 두개의 배열(oldVerts, newVerts)을 사용했다. 근데 지금 보면 큐 자료구조를 이용해서 한개의 자료구조 만으로도 만들 수 있을 듯 하다. 나중에 필요하면 공식 코드 보면서 비교해보자.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">BreadthFirstSearch</span>(Vertex<span style="color:#f92672">*</span> vert,<span style="color:#66d9ef">int</span> N) {
+	vert<span style="color:#f92672">-&gt;</span>fresh <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;<span style="color:#75715e">//정점 방문 표시
+</span><span style="color:#75715e"></span>	Vertex<span style="color:#f92672">**</span> oldVerts <span style="color:#f92672">=</span> (Vertex<span style="color:#f92672">**</span>)calloc(<span style="color:#66d9ef">sizeof</span>(Vertex<span style="color:#f92672">*</span>),N);<span style="color:#75715e">//탐색이 완료된 정점을 모아놓는 큐
+</span><span style="color:#75715e"></span>	Vertex<span style="color:#f92672">**</span> newVerts <span style="color:#f92672">=</span> (Vertex<span style="color:#f92672">**</span>)calloc(<span style="color:#66d9ef">sizeof</span>(Vertex<span style="color:#f92672">*</span>),N);<span style="color:#75715e">//앞으로 탐색할 정점을 모아놓는 큐
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;<span style="color:#75715e">//정점 큐에 노드를 추가하기 위한 변수.
+</span><span style="color:#75715e"></span>	oldVerts[index] <span style="color:#f92672">=</span> vert;<span style="color:#75715e">//처음 초기화.
+</span><span style="color:#75715e"></span>	index<span style="color:#f92672">++</span>;
+	<span style="color:#66d9ef">while</span> (<span style="color:#ae81ff">1</span>) {
+        Condition <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;<span style="color:#75715e">//While문 조건변수.
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> index; i<span style="color:#f92672">++</span>)<span style="color:#75715e">//oldVerts에 적재되어있는 모든 vertex
+</span><span style="color:#75715e"></span>		{
+			Node<span style="color:#f92672">*</span> tmp <span style="color:#f92672">=</span> oldVerts[i]<span style="color:#f92672">-&gt;</span>head;<span style="color:#75715e">//인접리스트 형식에서 붙어있는 간선들 
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">while</span> (tmp<span style="color:#f92672">-&gt;</span>nextNode <span style="color:#f92672">!=</span> NULL) {
+				tmp <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>nextNode;
+				<span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>vert <span style="color:#f92672">==</span> tmp<span style="color:#f92672">-&gt;</span>edge<span style="color:#f92672">-&gt;</span>vert1) {
+					<span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>edge<span style="color:#f92672">-&gt;</span>vert2<span style="color:#f92672">-&gt;</span>fresh <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">continue</span>;
+					<span style="color:#66d9ef">else</span> {
+						newHeap[Condition] <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>edge<span style="color:#f92672">-&gt;</span>vert2;
+						Condition<span style="color:#f92672">++</span>;
+						tmp<span style="color:#f92672">-&gt;</span>edge<span style="color:#f92672">-&gt;</span>vert2<span style="color:#f92672">-&gt;</span>fresh <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+					}
+				}
+				<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>edge<span style="color:#f92672">-&gt;</span>vert1<span style="color:#f92672">-&gt;</span>fresh <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">continue</span>;
+				<span style="color:#66d9ef">else</span> {
+					newHeap[Condition] <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>edge<span style="color:#f92672">-&gt;</span>vert1;
+					Condition<span style="color:#f92672">++</span>;
+					tmp<span style="color:#f92672">-&gt;</span>edge<span style="color:#f92672">-&gt;</span>vert1<span style="color:#f92672">-&gt;</span>fresh <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+				}
+			}
+		}<span style="color:#75715e">//newvert에 저장.
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> (Condition <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">break</span>;<span style="color:#75715e">//Condition이 0이면 더 탐색해야 하는 Verts가 없다는 뜻.
+</span><span style="color:#75715e"></span>		index <span style="color:#f92672">=</span> Condition;
+		<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> index; i<span style="color:#f92672">++</span>) {
+			oldVerts[i] <span style="color:#f92672">=</span> newVerts[i];
+		}<span style="color:#75715e">//탐색해야 할 정점들을 모아놨으니 다시 oldVerts에 적재하기
+</span><span style="color:#75715e"></span>	}
+	free(oldVerts);
+	free(newVerts);
+}</code></pre></td></tr></table>
+</div>
+</div>
+<p>BFS 또한 매력적인 문제를 풀 수 있는 기초적인 구조이다.</p>
+
+  </section>
+  <div class="share">    
+    <a
+      href="//www.facebook.com/sharer.php?src=bm&u=https%3a%2f%2fjordi02183.github.io%2fpost%2f10.dfsbfs%2f&t=10.%ea%b7%b8%eb%9e%98%ed%94%84%ec%9d%98%20%ec%88%9c%ed%9a%8c%2c%20%ea%b9%8a%ec%9d%b4%ec%9a%b0%ec%84%a0%ed%83%90%ec%83%89%2f%eb%84%88%eb%b9%84%ec%9a%b0%ec%84%a0%ed%83%90%ec%83%89%28DFS%2cBFS%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-facebook"></i
+    ></a>
+    <a
+      href="//twitter.com/intent/tweet?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f10.dfsbfs%2f&text=10.%ea%b7%b8%eb%9e%98%ed%94%84%ec%9d%98%20%ec%88%9c%ed%9a%8c%2c%20%ea%b9%8a%ec%9d%b4%ec%9a%b0%ec%84%a0%ed%83%90%ec%83%89%2f%eb%84%88%eb%b9%84%ec%9a%b0%ec%84%a0%ed%83%90%ec%83%89%28DFS%2cBFS%29&tw_p=tweetbutton"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-twitter"></i
+    ></a>
+    <a
+      href="//getpocket.com/edit?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f10.dfsbfs%2f&title=10.%ea%b7%b8%eb%9e%98%ed%94%84%ec%9d%98%20%ec%88%9c%ed%9a%8c%2c%20%ea%b9%8a%ec%9d%b4%ec%9a%b0%ec%84%a0%ed%83%90%ec%83%89%2f%eb%84%88%eb%b9%84%ec%9a%b0%ec%84%a0%ed%83%90%ec%83%89%28DFS%2cBFS%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-get-pocket"></i
+    ></a>
+    <a
+      href="//plus.google.com/share?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f10.dfsbfs%2f"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-google-plus"></i
+    ></a>
+  </div>
+  <div class="post-meta-code">
+    <div class="desc">
+      postAuthorPrefix
+      
+      <a href="mailto:sjc02183@naver.com">ChangHakKim</a>
+      
+      이
+      <span class="highlight">2020년 5월 14일 17시 11분</span> 
+      에 작성한 글입니다.
+    </div>
+    <div class="desc">
+      
+      <div class="desc">
+        <span class="fixed-desc">_카테고리</span>
+        
+        
+        <a href="https://jordi02183.github.io//categories/data-structure">#Data Structure</a>
+        
+      </div>
+      
+      <div class="desc">
+        <span class="fixed-desc">_태그</span>
+        
+      </div>
+    </div>
+  </div>  
+  
+  <div class="post-comment">    
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "XXXX" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>    
+  </div>
+  
+  <div class="recommend-articles">
+    이전/다음글
+    <ul>
+      
+      <li>
+        <a href="https://jordi02183.github.io/post/09.graph/" rel="prev">
+          <span>9.그래프 (Graph)</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+</div>
+
+<div class="go-top">
+  <a href="#" class="go-top-button">
+    <i class="fa fa-angle-double-up"></i>
+    <span>위로</span>
+  </a>
+</div>
+<footer class="footer">
+  COPYRIGHT (C) <a href="https://blog.lulab.net">DONGGEUN,BANG (LUBANG).</a><br />
+  ALL RIGHTS RESERVED.
+</footer>
+</body>
+</html>
+

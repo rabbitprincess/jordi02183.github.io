@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6.이진 탐색 트리 (Binary Search Tree)  | 전체글보기</title>
+  <meta name="description" content=" '6.이진 탐색 트리 (Binary Search Tree)'을 한 번 살펴보세요.">
+  <meta property="og:title" content="6.이진 탐색 트리 (Binary Search Tree)">
+  
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2020-05-14">
+  
+  <meta property="og:description" content=" '6.이진 탐색 트리 (Binary Search Tree)'을 한 번 살펴보세요.">
+  <meta property="og:url" content="https://jordi02183.github.io/post/06.binarytree/">
+  <meta property="og:site_name" content="전체글보기">
+  
+  <meta property="og:image" content="https://jordi02183.github.io/images/binarysearchtree.png">
+  
+  
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="canonical" href="https://jordi02183.github.io/post/06.binarytree/">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/agate.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXX-X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-XXXXXXXX-X');
+  </script>
+  
+  
+  <script type="text/javascript">
+  function toggle_visibility(id) {
+    var e = document.getElementById(id);
+    if (e.className === 'menu')
+      e.className = 'menu hidden';
+    else
+      e.className = 'menu';
+  }
+  </script>
+</head>
+<body>
+  <div class="navbar">    
+    <div class="logo">
+      <a href="/">
+        <img src="/images/logo.png" height="42px" />
+      </a>
+    </div>
+    <div class="burger">
+      <button onclick="toggle_visibility('menu')">
+        <i class="fa fa-bars" aria-hidden="true"></i> 메뉴
+      </button>
+    </div>
+    <div id="menu" class="menu hidden">
+      <ul>
+        <li><a href="/">전체글보기</a></li>
+        <li><a href="/categories">카테고리</a></li>
+        <li><a href="/tags">태그</a></li>
+        <li><a href="/projects">포트폴리오</a></li>        
+      </ul>
+      <input class="search" id="search-input" type="search" placeholder="검색어" value="">
+    </div>
+  </div>
+  <div class="container">    
+
+<div class="post">
+  <div class="post-title">
+    <a href="https://jordi02183.github.io/post/06.binarytree/">
+      <img src="/images/post-title-icon.png" />
+      <div class="post-meta">
+        <time>2020년 5월 14일 16시 30분</time>
+        <h1>6.이진 탐색 트리 (Binary Search Tree)</h1>
+      </div>
+    </a>
+  </div>
+  <div class="post-toc">
+    <span class="title">차례</span>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#이진-탐색-트리binary-search-tree">이진 탐색 트리(Binary Search Tree)</a></li>
+    <li><a href="#이진-탐색-트리의-구현">이진 탐색 트리의 구현</a></li>
+    <li><a href="#이진-트리의-문제점-편향-이진-트리skewed-binary-tree">이진 트리의 문제점, 편향 이진 트리(skewed binary tree)</a></li>
+  </ul>
+</nav>
+  </div>
+  <section class="post-content">
+    <h2 id="이진-탐색-트리binary-search-tree">이진 탐색 트리(Binary Search Tree)</h2>
+<p>이진 탐색 트리(Binary Search Tree)는 내부노드에 키 또는 키와 원소쌍을 저장하는 트리이다. 이진 트리는 다음과 같은 성질을 만족한다.</p>
+<ul>
+<li>u와 w가 각각 v의 왼쪽,오른쪽 노드일때, key(u) &lt; key(v) &lt;= key(w)가 성립.</li>
+</ul>
+<p>위와 같은 특성 덕분에 우리는 중위 순회를 통해 정렬된 값을 얻을 수 있다.</p>
+<figure>
+    <img src="/images/binarysearchtree.png"/> 
+</figure>
+
+<p>이진 탐색 트리 또한 삽입, 탐색, 삭제 세 가지 메소드를 구현해야 하는데, 삽입과 탐색은 아주 쉽게 구현할 수 있지만 삭제가 조금 구현할 때 골치가 아프다.​</p>
+<ul>
+<li>
+<p>삽입
+마찬가지로 루트 노드에서부터 탐색하며 삽입하는 노드의 값이 현재 노드 보다 더 크면 오른쪽 자식을 방문, 작으면 왼쪽 자식을 방문하는 것을 반복하다가 NULL을 만나면 해당 위치에 노드를 삽입하고 종료한다.</p>
+</li>
+<li>
+<p>탐색
+트리의 루트 노드 부터 순회하며 탐색 해야 하는 값이 루트 노드보다 클 경우 오른쪽 자식을 방문, 작을 경우 왼쪽 자식을 방문하고, 같을 경우 탐색을 마친다. 방문한 노드가 NULL이 될 때까지 탐색 값을 찾지 못하면, 해당 트리에 탐색 값이 없는 것으로 간주된다.</p>
+</li>
+<li>
+<p>삭제
+삭제 부분이 좀 복잡한데, 트리를 순회 중 삭제해야 하는 값을 발견하면 해당 노드를 삭제한다. 그러면 그 자리에 트리에 있는 노드들 중 다른 노드를 대체해줘야 한다. 현재 노드를 기준으로 오른쪽 자식트리의 모든 노드는 현재 노드 보다 크고, 왼쪽 자식트리의 모든 노드는 현재 노드 보다 작으므로, 오른쪽 자식 트리 중에서 가장 작은 값을 가지는 노드를 대체해주면 이진 트리의 속성이 유지된다.</p>
+</li>
+</ul>
+<h2 id="이진-탐색-트리의-구현">이진 탐색 트리의 구현</h2>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">103
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">104
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">105
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">106
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">107
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">108
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">109
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">110
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">111
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">112
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">113
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">114
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">115
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">116
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">117
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">118
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">119
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">120
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">121
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">122
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">123
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">124
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">125
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">126
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">127
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">128
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">129
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">130
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">131
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">132
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">133
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">134
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">135
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">136
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">137
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">138
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">139
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">140
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">141
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">142
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">143
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">144
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">145
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">146
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">147
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">148
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span><span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span><span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> tagNode {
+	<span style="color:#66d9ef">int</span> element;
+	<span style="color:#66d9ef">struct</span> tagNode<span style="color:#f92672">*</span> parent;
+	<span style="color:#66d9ef">struct</span> tagNode<span style="color:#f92672">*</span> left;
+	<span style="color:#66d9ef">struct</span> tagNode<span style="color:#f92672">*</span> right;
+}Node;
+
+Node<span style="color:#f92672">*</span> <span style="color:#a6e22e">createNode</span>(<span style="color:#66d9ef">int</span> element, Node<span style="color:#f92672">*</span> left, Node<span style="color:#f92672">*</span> right, Node<span style="color:#f92672">*</span> parent) {
+	Node<span style="color:#f92672">*</span> tmp <span style="color:#f92672">=</span> (Node<span style="color:#f92672">*</span>)malloc(<span style="color:#66d9ef">sizeof</span>(Node));
+	tmp<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">=</span> element;
+	tmp<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> left;
+	tmp<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> right;
+	tmp<span style="color:#f92672">-&gt;</span>parent <span style="color:#f92672">=</span> parent;
+	<span style="color:#66d9ef">return</span> tmp;
+}
+
+Node<span style="color:#f92672">*</span> <span style="color:#a6e22e">findElement</span>(Node<span style="color:#f92672">*</span> v, <span style="color:#66d9ef">int</span> element) {
+	<span style="color:#66d9ef">if</span> (v<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">==</span> element) {
+		printf(<span style="color:#e6db74">&#34;%d&#34;</span>, v<span style="color:#f92672">-&gt;</span>element);
+		<span style="color:#66d9ef">return</span> v;
+	}
+	<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (v<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">==</span> NULL <span style="color:#f92672">&amp;&amp;</span> v<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">&gt;</span> element) printf(<span style="color:#e6db74">&#34;해당 값을 지닌 노드가 없습니다.&#34;</span>);<span style="color:#75715e">//NoSuchKey
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (v<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">==</span> NULL <span style="color:#f92672">&amp;&amp;</span> v<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">&lt;</span> element) printf(<span style="color:#e6db74">&#34;해당 값을 지닌 노드가 없습니다.&#34;</span>);<span style="color:#75715e">//NoSuchKey
+</span><span style="color:#75715e"></span>
+	<span style="color:#66d9ef">if</span> (v<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">&lt;</span> element) findElement(v<span style="color:#f92672">-&gt;</span>right, element);
+	<span style="color:#66d9ef">else</span> findElement(v<span style="color:#f92672">-&gt;</span>left, element);
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">Insert</span>(Node<span style="color:#f92672">*</span> root, <span style="color:#66d9ef">int</span> element) {
+	Node<span style="color:#f92672">*</span> tmp <span style="color:#f92672">=</span> root;
+	<span style="color:#66d9ef">while</span> (<span style="color:#ae81ff">1</span>) {
+		<span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">==</span> NULL <span style="color:#f92672">&amp;&amp;</span> tmp<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">&gt;</span> element)
+		{
+			Node<span style="color:#f92672">*</span> N <span style="color:#f92672">=</span> createNode(element, NULL, NULL, tmp);
+			tmp<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> N;
+			<span style="color:#66d9ef">break</span>;
+		}
+		<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">==</span> NULL <span style="color:#f92672">&amp;&amp;</span> tmp<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">&lt;</span> element)
+		{
+			Node<span style="color:#f92672">*</span> N <span style="color:#f92672">=</span> createNode(element, NULL, NULL, NULL);
+			N<span style="color:#f92672">-&gt;</span>parent <span style="color:#f92672">=</span> tmp;
+			tmp<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> N;
+			<span style="color:#66d9ef">break</span>;
+		}
+		<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">&gt;</span> element) tmp <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>left;
+		<span style="color:#66d9ef">else</span> tmp <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>right;
+	}
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">Delete</span>(Node<span style="color:#f92672">*</span> root, <span style="color:#66d9ef">int</span> element) {
+	Node<span style="color:#f92672">*</span> tmp <span style="color:#f92672">=</span> root;
+	<span style="color:#66d9ef">int</span> flag <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+	<span style="color:#66d9ef">while</span> (<span style="color:#ae81ff">1</span>) {
+		<span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">==</span> NULL <span style="color:#f92672">&amp;&amp;</span> tmp<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">&gt;</span> element)
+		{
+			printf(<span style="color:#e6db74">&#34;찾는 값이 없습니다.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+			flag <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+			<span style="color:#66d9ef">break</span>;
+		}<span style="color:#75715e">//NoSuchKey
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">==</span> NULL <span style="color:#f92672">&amp;&amp;</span> tmp<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">&lt;</span> element)
+		{
+			printf(<span style="color:#e6db74">&#34;찾는 값이 없습니다.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+			flag <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+			<span style="color:#66d9ef">break</span>;
+		}<span style="color:#75715e">//NoSuchKey
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">&gt;</span> element) tmp <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>left;
+		<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">&lt;</span> element) tmp <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>right;
+		<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>element <span style="color:#f92672">==</span> element) {
+			flag <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+			<span style="color:#66d9ef">break</span>;
+		}<span style="color:#75715e">//Suchkey
+</span><span style="color:#75715e"></span>	}<span style="color:#75715e">//searchNode
+</span><span style="color:#75715e"></span>
+	<span style="color:#66d9ef">if</span> (flag <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+		Node<span style="color:#f92672">*</span> tmp2 <span style="color:#f92672">=</span> tmp;
+		printf(<span style="color:#e6db74">&#34;%d 값이 삭제되었습니다.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, tmp2<span style="color:#f92672">-&gt;</span>element);
+		<span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">==</span> NULL <span style="color:#f92672">&amp;&amp;</span> tmp<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">==</span> NULL) {
+			<span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">==</span> tmp) tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> NULL;
+			<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">==</span> tmp) tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> NULL;
+		}<span style="color:#75715e">//no child
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">==</span> NULL) {
+			tmp<span style="color:#f92672">-&gt;</span>left<span style="color:#f92672">-&gt;</span>parent <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>parent;
+			<span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">==</span> tmp) tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>left;
+			<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">==</span> tmp) tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>left;
+		}<span style="color:#75715e">//left child
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">==</span> NULL) {
+			tmp<span style="color:#f92672">-&gt;</span>right<span style="color:#f92672">-&gt;</span>parent <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>parent;
+			<span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">==</span> tmp) tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>right;
+			<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">==</span> tmp) tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>right;
+		}<span style="color:#75715e">//right child
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">!=</span> NULL <span style="color:#f92672">&amp;&amp;</span> tmp<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">!=</span> NULL) {
+			Node<span style="color:#f92672">*</span> child <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>right;
+			<span style="color:#66d9ef">if</span> (child<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">==</span> NULL) {
+				<span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">==</span> tmp) tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> child;
+				<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">==</span> tmp) tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> child;
+				child<span style="color:#f92672">-&gt;</span>parent <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>parent;
+				child<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>left;
+				tmp<span style="color:#f92672">-&gt;</span>left<span style="color:#f92672">-&gt;</span>parent <span style="color:#f92672">=</span> child;
+			}<span style="color:#75715e">//child의 left가 NULL인 케이스
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">else</span>
+			{
+				<span style="color:#66d9ef">while</span> (child<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">!=</span> NULL) child <span style="color:#f92672">=</span> child<span style="color:#f92672">-&gt;</span>left;
+				<span style="color:#66d9ef">if</span> (child<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">!=</span> NULL) {
+					child<span style="color:#f92672">-&gt;</span>right<span style="color:#f92672">-&gt;</span>parent <span style="color:#f92672">=</span> child<span style="color:#f92672">-&gt;</span>parent;
+					child<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> child<span style="color:#f92672">-&gt;</span>right;
+				}<span style="color:#75715e">//중위순회 후계자의 오른쪽 자식 처리.
+</span><span style="color:#75715e"></span>				<span style="color:#66d9ef">else</span> child<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> NULL;
+				child<span style="color:#f92672">-&gt;</span>parent <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>parent;
+				child<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>left;
+				child<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>right;
+				tmp<span style="color:#f92672">-&gt;</span>left<span style="color:#f92672">-&gt;</span>parent <span style="color:#f92672">=</span> child;
+				tmp<span style="color:#f92672">-&gt;</span>right<span style="color:#f92672">-&gt;</span>parent <span style="color:#f92672">=</span> child;
+				<span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">==</span> tmp) tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">=</span> child;
+				<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">==</span> tmp) tmp<span style="color:#f92672">-&gt;</span>parent<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">=</span> child;
+			}<span style="color:#75715e">//child의 left가 NULL이 아닌 케이스
+</span><span style="color:#75715e"></span>		}<span style="color:#75715e">//both child
+</span><span style="color:#75715e"></span>		free(tmp2);
+	}<span style="color:#75715e">//deleteNode
+</span><span style="color:#75715e"></span>}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">printTree</span>(Node<span style="color:#f92672">*</span> v) {
+	<span style="color:#66d9ef">if</span> (v<span style="color:#f92672">-&gt;</span>left <span style="color:#f92672">!=</span> NULL) {
+		printTree(v<span style="color:#f92672">-&gt;</span>left);
+	}
+	printf(<span style="color:#e6db74">&#34; %d&#34;</span>, v<span style="color:#f92672">-&gt;</span>element);
+	<span style="color:#66d9ef">if</span> (v<span style="color:#f92672">-&gt;</span>right <span style="color:#f92672">!=</span> NULL) {
+		printTree(v<span style="color:#f92672">-&gt;</span>right);
+	}
+}<span style="color:#75715e">//중위 순회
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+	Node<span style="color:#f92672">*</span> root <span style="color:#f92672">=</span> createNode(<span style="color:#ae81ff">10</span>, NULL, NULL, NULL);
+	Insert(root, <span style="color:#ae81ff">7</span>);
+	Insert(root, <span style="color:#ae81ff">16</span>);
+	Insert(root, <span style="color:#ae81ff">14</span>);
+	Insert(root, <span style="color:#ae81ff">3</span>);
+	Insert(root, <span style="color:#ae81ff">19</span>);
+	Insert(root, <span style="color:#ae81ff">22</span>);
+	printTree(root);
+	printf(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+	Delete(root, <span style="color:#ae81ff">22</span>);
+	Delete(root, <span style="color:#ae81ff">7</span>);
+	printTree(root);
+	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}</code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="이진-트리의-문제점-편향-이진-트리skewed-binary-tree">이진 트리의 문제점, 편향 이진 트리(skewed binary tree)</h2>
+<p>이런 식으로 열심히 이진 트리를 만들어봤자 실제로 쓰다 보면 비뚤게 자라서 탐색으로는 영 써먹지 못하는 폐기물이 완성되게 된다. 최악의 경우를 생각해보자. 예를 들어, 비어있는 이진 탐색 트리에 1부터 100까지 순서대로 삽입한다면 처음 루트 노드는 1이 되고, 2는 1보다 크니 1의 오른쪽 자식이 되고, 3은 1보다 크니 1의 오른쪽, 2보다 크니 2의 오른쪽… 이런 식으로 트리의 오른쪽 끝으로만 계속 성장하게 된다. 이 상태로 50을 찾는다고 하면 결국 1부터 순서대로 오른쪽으로 쭈욱 내려가는 선형 탐색이나 다를게 없게 된다. 이러한 경우를 트리가 편향(skew)되었다고 한다.</p>
+<p>이런 극단적인 경우가 아니라고 해도, 트리는 완벽하게 자라기보단 비뚤게 자랄 확률이 더 크기 떄문에, 탐색에 필요한 자원을 불필요하게 증가시킨다.</p>
+<p>이 문제를 해결할 수 있는 방법이 Red-Black Tree와 AVL Tree인데, 이는 다음 시간에 작성해보도록 하자.</p>
+
+  </section>
+  <div class="share">    
+    <a
+      href="//www.facebook.com/sharer.php?src=bm&u=https%3a%2f%2fjordi02183.github.io%2fpost%2f06.binarytree%2f&t=6.%ec%9d%b4%ec%a7%84%20%ed%83%90%ec%83%89%20%ed%8a%b8%eb%a6%ac%20%28Binary%20Search%20Tree%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-facebook"></i
+    ></a>
+    <a
+      href="//twitter.com/intent/tweet?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f06.binarytree%2f&text=6.%ec%9d%b4%ec%a7%84%20%ed%83%90%ec%83%89%20%ed%8a%b8%eb%a6%ac%20%28Binary%20Search%20Tree%29&tw_p=tweetbutton"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-twitter"></i
+    ></a>
+    <a
+      href="//getpocket.com/edit?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f06.binarytree%2f&title=6.%ec%9d%b4%ec%a7%84%20%ed%83%90%ec%83%89%20%ed%8a%b8%eb%a6%ac%20%28Binary%20Search%20Tree%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-get-pocket"></i
+    ></a>
+    <a
+      href="//plus.google.com/share?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f06.binarytree%2f"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-google-plus"></i
+    ></a>
+  </div>
+  <div class="post-meta-code">
+    <div class="desc">
+      postAuthorPrefix
+      
+      <a href="mailto:sjc02183@naver.com">ChangHakKim</a>
+      
+      이
+      <span class="highlight">2020년 5월 14일 16시 30분</span> 
+      에 작성한 글입니다.
+    </div>
+    <div class="desc">
+      
+      <div class="desc">
+        <span class="fixed-desc">_카테고리</span>
+        
+        
+        <a href="https://jordi02183.github.io//categories/data-structure">#Data Structure</a>
+        
+      </div>
+      
+      <div class="desc">
+        <span class="fixed-desc">_태그</span>
+        
+      </div>
+    </div>
+  </div>  
+  
+  <div class="post-comment">    
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "XXXX" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>    
+  </div>
+  
+  <div class="recommend-articles">
+    이전/다음글
+    <ul>
+      
+      <li>
+        <a href="https://jordi02183.github.io/post/05.heap/" rel="prev">
+          <span>5.우선순위 큐와 힙 (Prior Queue&amp;Heap)</span>
+        </a>
+      </li>
+      
+      
+      <li>
+        <a href="https://jordi02183.github.io/post/07.avltree/" rel="next">
+          <span>7.균형잡힌 트리, AVL 트리 (AVL Tree)</span>
+        </a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="go-top">
+  <a href="#" class="go-top-button">
+    <i class="fa fa-angle-double-up"></i>
+    <span>위로</span>
+  </a>
+</div>
+<footer class="footer">
+  COPYRIGHT (C) <a href="https://blog.lulab.net">DONGGEUN,BANG (LUBANG).</a><br />
+  ALL RIGHTS RESERVED.
+</footer>
+</body>
+</html>
+
