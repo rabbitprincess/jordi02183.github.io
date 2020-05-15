@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>11.방향그래프, 방향 비사이클, 위상 정렬(Directed Graph, Directed Acyclic Graph, Topological Sort)  | 전체글보기</title>
+  <meta name="description" content=" '11.방향그래프, 방향 비사이클, 위상 정렬(Directed Graph, Directed Acyclic Graph, Topological Sort)'을 한 번 살펴보세요.">
+  <meta property="og:title" content="11.방향그래프, 방향 비사이클, 위상 정렬(Directed Graph, Directed Acyclic Graph, Topological Sort)">
+  
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2020-05-15">
+  
+  <meta property="og:description" content=" '11.방향그래프, 방향 비사이클, 위상 정렬(Directed Graph, Directed Acyclic Graph, Topological Sort)'을 한 번 살펴보세요.">
+  <meta property="og:url" content="https://jordi02183.github.io/post/11.directgraph/">
+  <meta property="og:site_name" content="전체글보기">
+  
+  <meta property="og:image" content="https://jordi02183.github.io/images/directgraph.png">
+  
+  
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="canonical" href="https://jordi02183.github.io/post/11.directgraph/">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/agate.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXX-X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-XXXXXXXX-X');
+  </script>
+  
+  
+  <script type="text/javascript">
+  function toggle_visibility(id) {
+    var e = document.getElementById(id);
+    if (e.className === 'menu')
+      e.className = 'menu hidden';
+    else
+      e.className = 'menu';
+  }
+  </script>
+</head>
+<body>
+  <div class="navbar">    
+    <div class="logo">
+      <a href="/">
+        <img src="/images/logo.png" height="42px" />
+      </a>
+    </div>
+    <div class="burger">
+      <button onclick="toggle_visibility('menu')">
+        <i class="fa fa-bars" aria-hidden="true"></i> 메뉴
+      </button>
+    </div>
+    <div id="menu" class="menu hidden">
+      <ul>
+        <li><a href="/">전체글보기</a></li>
+        <li><a href="/categories">카테고리</a></li>
+        <li><a href="/tags">태그</a></li>
+        <li><a href="/projects">포트폴리오</a></li>        
+      </ul>
+      <input class="search" id="search-input" type="search" placeholder="검색어" value="">
+    </div>
+  </div>
+  <div class="container">    
+
+<div class="post">
+  <div class="post-title">
+    <a href="https://jordi02183.github.io/post/11.directgraph/">
+      <img src="/images/post-title-icon.png" />
+      <div class="post-meta">
+        <time>2020년 5월 15일 12시 11분</time>
+        <h1>11.방향그래프, 방향 비사이클, 위상 정렬(Directed Graph, Directed Acyclic Graph, Topological Sort)</h1>
+      </div>
+    </a>
+  </div>
+  <div class="post-toc">
+    <span class="title">차례</span>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#방향-그래프directed-graph">방향 그래프(Directed Graph)</a></li>
+    <li><a href="#방향-그래프의-속성">방향 그래프의 속성</a></li>
+    <li><a href="#방향-비사이클-그래프directed-acyclic-graph와-위상-정렬toplogical-sort">방향 비사이클 그래프(Directed Acyclic Graph)와 위상 정렬(Toplogical Sort)</a></li>
+  </ul>
+</nav>
+  </div>
+  <section class="post-content">
+    <h2 id="방향-그래프directed-graph">방향 그래프(Directed Graph)</h2>
+<p>방향그래프(directed graph), 또는 유한 그래프는 모든 간선이 단방향간선인 그래프를 의미한다. 방향그래프는 일방통행 도로, 항공편, 작업 스케줄링 등에 광범위하게 응용되는 그래프의 하위 자료구조이다.
+<figure>
+    <img src="/images/directgraph.png"/> 
+</figure>
+
+방향그래프에서 간선은 A에서 B로만 가고, B에서 A로는 가지 않는다.간선들을 주어진 방향만을 따라 수행하도록 하면, DFS나 BFS 알고리즘을 더욱 방향그래프에 맞는 방식으로 특화시킬 수 있다.</p>
+<h2 id="방향-그래프의-속성">방향 그래프의 속성</h2>
+<ul>
+<li>방향DFS</li>
+</ul>
+<p>방향DFS 알고리즘에서는 다음 4가지 종류의 간선이 발생한다.</p>
+<ol>
+<li>트리간선 : 간선 (v,w)에서 정점 w가 v의 직계 자식이다.</li>
+<li>후향간선 : 간선 (v,w)에서 정점 w가 v의 조상이다.</li>
+<li>전향간선 : 간섬 (v,w)에서 정점 w가 v의 자손이다.</li>
+<li>교차간선 : 간선 (v,w)에서 정점 w가 v와 동일한 레벨 또는 직계가 아닌 다음 레벨에 위치한다.
+(여기서 자식과 부모의 의미는 DFS에서의 순회 단계로 이루어진다.)</li>
+</ol>
+<ul>
+<li>도달 가능성(reachable)</li>
+</ul>
+<p>방향그래프 G의 두 정점 u와 v에 대해 u에서 v로 가는 경로가 존재한다면 u는 v로 도달, 또는 v는 u로 도달 가능(v is reachable from u)하다고 말한다. 도달 가능성 문제는 DFS 또는 BFS로 풀 수 있다.(모두 방문해보고 방문 안되어있으면 도달 불가능)</p>
+<ul>
+<li>강연결성(strongly connected)</li>
+</ul>
+<p><figure>
+    <img src="/images/powergraph.png"/> 
+</figure>
+
+방향그래프 G의 어느 두 정점 (u,v)에 대해서나 u가 v에 도달할 수 있고, 동시에 v가 u에 도달 가능하다면, 즉 한 정점에서 다른 정점까지 자유롭게 도착할 수 있으면 강연결성(strongly connected)을 가지고 있다고 말한다.</p>
+<ul>
+<li>강연결요소(Strongly connected conponents)
+<figure>
+    <img src="/images/powergraph2.png"/> 
+</figure>
+</li>
+</ul>
+<p>강연결요소란 방향그래프에서 각 정점으로부터 다른 모든 정점으로 도달할 수 있는 최대 크기의 부그래프들을 말한다. 위 그래프는 강연결성을 가지고 있지 않만, 세 개로 나누어진 부 그래프인 (0,1,2), (3), (4)는 강연결성을 가지고 있다</p>
+<h2 id="방향-비사이클-그래프directed-acyclic-graph와-위상-정렬toplogical-sort">방향 비사이클 그래프(Directed Acyclic Graph)와 위상 정렬(Toplogical Sort)</h2>
+<p>방향 비싸이클 그래프(directed acyclid graph) : 방향 비사이클 그래프는 방향 그래프의 한 종류로써, 싸이클이 존재하지 않는 방향그래프를 말한다. 방향 비싸이클 그래프는 트리 구조와 그래프 구조의 중간쯤에 놓여져 있는 애매한 자료구조이다. 하지만 역시 부모와 자식관의 관계만 신경쓰면 되는 트리보다는 복잡한 자료구조이다. 복잡하기 그지없는 우리 세종대학교 컴퓨터공학과의 공학인증 시스템이 방향 비사이클 그래프의 한 예이다.</p>
+<p><figure>
+    <img src="/images/sejong.png"/> 
+</figure>
+
+방향 비사이클 그래프에서는  위상순서라는 중요한 문제를 해결해야 한다. 위상순서는 트리의 레벨과 대응하는, 어떤 일을 하는 순서를 말하는데, 예를 들어 대학교에서 C와 공학설계기초를 들어야만 자료 구조를 들을 수 있다고 했을 때, C와 공학설계기초의 위상 순위는 1, 자료구조의 순위는 2가 된다.</p>
+<p>아래는 C로 구현한 방향 비싸이클 그래프와 위상 정렬의 구현 예제이다.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">103
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">104
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">105
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">106
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">107
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">108
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">109
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">110
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">111
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">112
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">113
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">114
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">115
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">116
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">117
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">118
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">119
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">120
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">121
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">122
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">123
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">124
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">125
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">126
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">127
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">128
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">129
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">130
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">131
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span><span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span><span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span><span style="color:#75715e">&lt;string.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> tagVertex {
+	<span style="color:#66d9ef">struct</span> inEdgeNode <span style="color:#f92672">*</span>inHead;
+	<span style="color:#66d9ef">struct</span> outEdgeNode <span style="color:#f92672">*</span>outHead;
+	<span style="color:#66d9ef">int</span> inDegree;
+	<span style="color:#66d9ef">int</span> fresh;
+	<span style="color:#66d9ef">char</span> vert;
+
+}Vert;
+
+<span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> inEdgeNode {
+	Vert<span style="color:#f92672">*</span> vert;
+	Vert<span style="color:#f92672">*</span> inEdge;<span style="color:#75715e">//이 정점으로 오는 정점의 정보
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">struct</span> inEdgeNode<span style="color:#f92672">*</span> nextNode;
+}inEdgeNode;<span style="color:#75715e">//들어오는 간선을 모아놓은 노드
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> outEdgeNode {
+	Vert<span style="color:#f92672">*</span> vert;
+	Vert<span style="color:#f92672">*</span> outEdge;<span style="color:#75715e">//이 vert에서 나가서 도착하는 정점의 정보
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">struct</span> outEdgeNode<span style="color:#f92672">*</span> nextNode;
+}outEdgeNode;<span style="color:#75715e">//나가는 간선을 모아놓은 노드
+</span><span style="color:#75715e"></span>
+
+Vert<span style="color:#f92672">*</span> <span style="color:#a6e22e">insertVertex</span>(<span style="color:#66d9ef">char</span> c) {
+	Vert<span style="color:#f92672">*</span> tmp <span style="color:#f92672">=</span> (Vert<span style="color:#f92672">*</span>)malloc(<span style="color:#66d9ef">sizeof</span>(Vert));
+	tmp<span style="color:#f92672">-&gt;</span>inHead <span style="color:#f92672">=</span> NULL;
+	tmp<span style="color:#f92672">-&gt;</span>outHead <span style="color:#f92672">=</span> NULL;
+	tmp<span style="color:#f92672">-&gt;</span>vert <span style="color:#f92672">=</span> c;
+	tmp<span style="color:#f92672">-&gt;</span>inDegree <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+	tmp<span style="color:#f92672">-&gt;</span>fresh <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+	<span style="color:#66d9ef">return</span> tmp;
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">insertDirectEdge</span>(Vert<span style="color:#f92672">*</span> v1, Vert<span style="color:#f92672">*</span> v2) {
+	outEdgeNode<span style="color:#f92672">*</span> tmp1 <span style="color:#f92672">=</span> (outEdgeNode<span style="color:#f92672">*</span>)malloc(<span style="color:#66d9ef">sizeof</span>(outEdgeNode));
+	tmp1<span style="color:#f92672">-&gt;</span>vert <span style="color:#f92672">=</span> v1;
+	tmp1<span style="color:#f92672">-&gt;</span>outEdge <span style="color:#f92672">=</span> v2;
+	tmp1<span style="color:#f92672">-&gt;</span>nextNode <span style="color:#f92672">=</span> NULL;
+	inEdgeNode<span style="color:#f92672">*</span> tmp2 <span style="color:#f92672">=</span> (inEdgeNode<span style="color:#f92672">*</span>)malloc(<span style="color:#66d9ef">sizeof</span>(inEdgeNode));
+	tmp2<span style="color:#f92672">-&gt;</span>vert <span style="color:#f92672">=</span> v2;
+	tmp2<span style="color:#f92672">-&gt;</span>inEdge <span style="color:#f92672">=</span> v1;
+	tmp2<span style="color:#f92672">-&gt;</span>nextNode <span style="color:#f92672">=</span> NULL;
+	<span style="color:#66d9ef">if</span> (v1<span style="color:#f92672">-&gt;</span>outHead <span style="color:#f92672">==</span> NULL) v1<span style="color:#f92672">-&gt;</span>outHead <span style="color:#f92672">=</span> tmp1;
+	<span style="color:#66d9ef">else</span> {
+		tmp1<span style="color:#f92672">-&gt;</span>nextNode <span style="color:#f92672">=</span> v1<span style="color:#f92672">-&gt;</span>outHead;
+		v1<span style="color:#f92672">-&gt;</span>outHead <span style="color:#f92672">=</span> tmp1;
+	}<span style="color:#75715e">//v1의 진출간선 추가
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> (v2<span style="color:#f92672">-&gt;</span>inHead <span style="color:#f92672">==</span> NULL) v2<span style="color:#f92672">-&gt;</span>inHead <span style="color:#f92672">=</span> tmp2;
+	<span style="color:#66d9ef">else</span> {
+		tmp2<span style="color:#f92672">-&gt;</span>nextNode <span style="color:#f92672">=</span> v2<span style="color:#f92672">-&gt;</span>inHead;
+		v2<span style="color:#f92672">-&gt;</span>inHead <span style="color:#f92672">=</span> tmp2;
+	}<span style="color:#75715e">//v2의 진입간선 추가
+</span><span style="color:#75715e"></span>	v2<span style="color:#f92672">-&gt;</span>inDegree<span style="color:#f92672">++</span>;<span style="color:#75715e">//진입했을때의 진입차수 갱신
+</span><span style="color:#75715e"></span>}<span style="color:#75715e">//v1에서 v2로 가는 정보 기록.
+</span><span style="color:#75715e"></span>
+Vert<span style="color:#f92672">**</span> <span style="color:#a6e22e">buildGraph</span>(<span style="color:#66d9ef">int</span> N) {
+	<span style="color:#66d9ef">int</span> i, M;
+	Vert<span style="color:#f92672">**</span> myVert <span style="color:#f92672">=</span> (Vert<span style="color:#f92672">**</span>)malloc(<span style="color:#66d9ef">sizeof</span>(Vert<span style="color:#f92672">*</span>)<span style="color:#f92672">*</span>N);
+	<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> N; i<span style="color:#f92672">++</span>) {
+		<span style="color:#66d9ef">char</span> c;
+		scanf(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">%c&#34;</span>, <span style="color:#f92672">&amp;</span>c);
+		myVert[i] <span style="color:#f92672">=</span> insertVertex(c);
+	}
+	scanf(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#f92672">&amp;</span>M);
+
+	<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> M; i<span style="color:#f92672">++</span>) {
+		<span style="color:#66d9ef">char</span> a;
+		<span style="color:#66d9ef">char</span> b;
+		Vert<span style="color:#f92672">*</span> v1 <span style="color:#f92672">=</span> NULL;
+		Vert<span style="color:#f92672">*</span> v2 <span style="color:#f92672">=</span> NULL;
+		scanf(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">%c %c&#34;</span>, <span style="color:#f92672">&amp;</span>a, <span style="color:#f92672">&amp;</span>b);
+		<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> N; j<span style="color:#f92672">++</span>) {
+			<span style="color:#66d9ef">if</span> (a <span style="color:#f92672">==</span> myVert[j]<span style="color:#f92672">-&gt;</span>vert) v1 <span style="color:#f92672">=</span> myVert[j];
+			<span style="color:#66d9ef">if</span> (b <span style="color:#f92672">==</span> myVert[j]<span style="color:#f92672">-&gt;</span>vert) v2 <span style="color:#f92672">=</span> myVert[j];
+		}
+		insertDirectEdge(v1, v2);
+	}
+	<span style="color:#66d9ef">return</span> myVert;
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">topologicalSort</span>(Vert<span style="color:#f92672">**</span> graph, <span style="color:#66d9ef">int</span> N) {
+	<span style="color:#66d9ef">int</span> i, x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, y <span style="color:#f92672">=</span> N <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, z <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, t <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+	<span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, end <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+	Vert<span style="color:#f92672">**</span> queue <span style="color:#f92672">=</span> (Vert<span style="color:#f92672">**</span>)calloc(<span style="color:#66d9ef">sizeof</span>(Vert<span style="color:#f92672">**</span>), N);
+	<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> topOrder <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)calloc(<span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">char</span>), N);
+
+	<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> N; i<span style="color:#f92672">++</span>)
+	{
+		<span style="color:#66d9ef">if</span> (graph[i]<span style="color:#f92672">-&gt;</span>inDegree <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+			queue[end] <span style="color:#f92672">=</span> graph[i];
+			end<span style="color:#f92672">++</span>;
+		}
+	}
+	
+	<span style="color:#66d9ef">while</span> (start <span style="color:#f92672">&lt;</span> end) {
+		Vert<span style="color:#f92672">*</span> tmp <span style="color:#f92672">=</span> queue[start];
+		tmp<span style="color:#f92672">-&gt;</span>fresh <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+		topOrder[start] <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>vert;
+		start<span style="color:#f92672">++</span>;
+
+		outEdgeNode<span style="color:#f92672">*</span> node <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>outHead;
+		<span style="color:#66d9ef">while</span> (node<span style="color:#f92672">!=</span>NULL)
+		{	
+			<span style="color:#66d9ef">if</span>(node<span style="color:#f92672">-&gt;</span>outEdge<span style="color:#f92672">-&gt;</span>fresh <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>){
+				node<span style="color:#f92672">-&gt;</span>outEdge<span style="color:#f92672">-&gt;</span>inDegree<span style="color:#f92672">--</span>;
+				<span style="color:#66d9ef">if</span> (node<span style="color:#f92672">-&gt;</span>outEdge<span style="color:#f92672">-&gt;</span>inDegree <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+					queue[end] <span style="color:#f92672">=</span> node<span style="color:#f92672">-&gt;</span>outEdge;
+					end<span style="color:#f92672">++</span>;
+				}
+			}			
+			node <span style="color:#f92672">=</span> node<span style="color:#f92672">-&gt;</span>nextNode;
+		}
+	}
+	<span style="color:#66d9ef">if</span> (end <span style="color:#f92672">&lt;</span> N<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) printf(<span style="color:#e6db74">&#34;0</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+	<span style="color:#66d9ef">else</span> {
+		<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> N; i<span style="color:#f92672">++</span>) {
+			printf(<span style="color:#e6db74">&#34;%c &#34;</span>, topOrder[i]);
+		}
+	}
+}
+
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#66d9ef">int</span> N, i, x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, y <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+	scanf(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#f92672">&amp;</span>N);
+	Vert<span style="color:#f92672">**</span> myGraph <span style="color:#f92672">=</span> buildGraph(N);
+	topologicalSort(myGraph, N);
+	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}</code></pre></td></tr></table>
+</div>
+</div>
+
+  </section>
+  <div class="share">    
+    <a
+      href="//www.facebook.com/sharer.php?src=bm&u=https%3a%2f%2fjordi02183.github.io%2fpost%2f11.directgraph%2f&t=11.%eb%b0%a9%ed%96%a5%ea%b7%b8%eb%9e%98%ed%94%84%2c%20%eb%b0%a9%ed%96%a5%20%eb%b9%84%ec%82%ac%ec%9d%b4%ed%81%b4%2c%20%ec%9c%84%ec%83%81%20%ec%a0%95%eb%a0%ac%28Directed%20Graph%2c%20Directed%20Acyclic%20Graph%2c%20Topological%20Sort%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-facebook"></i
+    ></a>
+    <a
+      href="//twitter.com/intent/tweet?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f11.directgraph%2f&text=11.%eb%b0%a9%ed%96%a5%ea%b7%b8%eb%9e%98%ed%94%84%2c%20%eb%b0%a9%ed%96%a5%20%eb%b9%84%ec%82%ac%ec%9d%b4%ed%81%b4%2c%20%ec%9c%84%ec%83%81%20%ec%a0%95%eb%a0%ac%28Directed%20Graph%2c%20Directed%20Acyclic%20Graph%2c%20Topological%20Sort%29&tw_p=tweetbutton"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-twitter"></i
+    ></a>
+    <a
+      href="//getpocket.com/edit?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f11.directgraph%2f&title=11.%eb%b0%a9%ed%96%a5%ea%b7%b8%eb%9e%98%ed%94%84%2c%20%eb%b0%a9%ed%96%a5%20%eb%b9%84%ec%82%ac%ec%9d%b4%ed%81%b4%2c%20%ec%9c%84%ec%83%81%20%ec%a0%95%eb%a0%ac%28Directed%20Graph%2c%20Directed%20Acyclic%20Graph%2c%20Topological%20Sort%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-get-pocket"></i
+    ></a>
+    <a
+      href="//plus.google.com/share?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f11.directgraph%2f"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-google-plus"></i
+    ></a>
+  </div>
+  <div class="post-meta-code">
+    <div class="desc">
+      postAuthorPrefix
+      
+      <a href="mailto:sjc02183@naver.com">ChangHakKim</a>
+      
+      이
+      <span class="highlight">2020년 5월 15일 12시 11분</span> 
+      에 작성한 글입니다.
+    </div>
+    <div class="desc">
+      
+      <div class="desc">
+        <span class="fixed-desc">_카테고리</span>
+        
+        
+        <a href="https://jordi02183.github.io//categories/data-structure">#Data Structure</a>
+        
+      </div>
+      
+      <div class="desc">
+        <span class="fixed-desc">_태그</span>
+        
+      </div>
+    </div>
+  </div>  
+  
+  <div class="post-comment">    
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "XXXX" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>    
+  </div>
+  
+  <div class="recommend-articles">
+    이전/다음글
+    <ul>
+      
+      <li>
+        <a href="https://jordi02183.github.io/post/10.dfsbfs/" rel="prev">
+          <span>10.그래프의 순회, 깊이우선탐색/너비우선탐색(DFS,BFS)</span>
+        </a>
+      </li>
+      
+      
+      <li>
+        <a href="https://jordi02183.github.io/post/12.weightgraphmst/" rel="next">
+          <span>12.가중 그래프와 최소신장트리(Weighted Graph, Minimum Spanning Tree)</span>
+        </a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="go-top">
+  <a href="#" class="go-top-button">
+    <i class="fa fa-angle-double-up"></i>
+    <span>위로</span>
+  </a>
+</div>
+<footer class="footer">
+  COPYRIGHT (C) <a href="https://blog.lulab.net">DONGGEUN,BANG (LUBANG).</a><br />
+  ALL RIGHTS RESERVED.
+</footer>
+</body>
+</html>
+

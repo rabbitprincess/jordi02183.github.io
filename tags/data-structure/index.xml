@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Data Structure on 전체글보기</title>
+    <link>https://jordi02183.github.io/tags/data-structure/</link>
+    <description>Recent content in Data Structure on 전체글보기</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ko-KR</language>
+    <managingEditor>sjc02183@naver.com (ChangHakKim)</managingEditor>
+    <webMaster>sjc02183@naver.com (ChangHakKim)</webMaster>
+    <lastBuildDate>Fri, 15 May 2020 13:35:42 +0900</lastBuildDate>
+    
+	<atom:link href="https://jordi02183.github.io/tags/data-structure/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>13.최단경로, 다익스트라 알고리즘(Shorted Path Problem, Dijkstra Algorithm)</title>
+      <link>https://jordi02183.github.io/post/13.shortestpathproblemdijkstra/</link>
+      <pubDate>Fri, 15 May 2020 13:35:42 +0900</pubDate>
+      <author>sjc02183@naver.com (ChangHakKim)</author>
+      <guid>https://jordi02183.github.io/post/13.shortestpathproblemdijkstra/</guid>
+      <description>다익스트라는 네덜란드 출신의 컴퓨터 과학자이면서, 튜링상 수상자이다. 개발자는 숫자를 0부터 세고, GoTo를 혐오하는 것은 이 다익스트라 아저씨가 제안한 것 덕분(떄문?)이라고 한다.
+최단경로(Shorted Path Problem) 최단경로는 앞에서 설명한 최소신장트리와는 비슷하면서도 다르다. 최소신장트리는 모든 경로에서 최단인 경로를 찾아내는 문제이고, 최단경로는 그 중 두 정점에만 집중해 두 정점의 가중치가 최소인 경로를 찾아내는 것이다. 최소신장트리의 일부분은 모두 최단경로이고, 최단경로의 일부 또한 모두 최단경로이다.
+단일점 최단경로 : 한 정점에서부터 도달하지 못하는 정점을 제외한 다른 모든 정점으로 이르는 최단경로를 모아놓은 것.</description>
+    </item>
+    
+    <item>
+      <title>12.가중 그래프와 최소신장트리(Weighted Graph, Minimum Spanning Tree)</title>
+      <link>https://jordi02183.github.io/post/12.weightgraphmst/</link>
+      <pubDate>Fri, 15 May 2020 13:15:42 +0900</pubDate>
+      <author>sjc02183@naver.com (ChangHakKim)</author>
+      <guid>https://jordi02183.github.io/post/12.weightgraphmst/</guid>
+      <description>간선에 가중치를 넣는 것은 그래프 본연의 업무 중 하나이다. 서울에서 수원을 거쳐 대전을 가는 것과 서울에서 경부고속도로를 거쳐 바로 부산으로 가는 그래프에서 가중치 정보를 넣지 않는다면, 대전으로 가는 것이 부산으로 가는것보다 두배 걸리는 우스운 상황도 벌어질 것이다. 가중 그래프에 대해 알아보자.
+가중 그래프(Weighted Graph)   가중그래프는 각 간선이 무게(weight) 또는 비용(cost)를 가진다. 각 무게는 거리, 비용, 시간 등 정량화할 수 있는 임의의 데이터로 이루어진다.
+가중 그래프를 만드는 방법은 간선에 weight 정보를 저장하는 것이다.</description>
+    </item>
+    
+  </channel>
+</rss>

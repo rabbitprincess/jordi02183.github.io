@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>13.최단경로, 다익스트라 알고리즘(Shorted Path Problem, Dijkstra Algorithm)  | 전체글보기</title>
+  <meta name="description" content=" '13.최단경로, 다익스트라 알고리즘(Shorted Path Problem, Dijkstra Algorithm)'을 한 번 살펴보세요.">
+  <meta property="og:title" content="13.최단경로, 다익스트라 알고리즘(Shorted Path Problem, Dijkstra Algorithm)">
+  
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2020-05-15">
+  
+  <meta property="og:description" content=" '13.최단경로, 다익스트라 알고리즘(Shorted Path Problem, Dijkstra Algorithm)'을 한 번 살펴보세요.">
+  <meta property="og:url" content="https://jordi02183.github.io/post/13.shortestpathproblemdijkstra/">
+  <meta property="og:site_name" content="전체글보기">
+  
+  <meta property="og:image" content="https://jordi02183.github.io/images/start0.png">
+  
+  
+  <meta property="og:tags" content="Data Structure">
+  
+  <meta property="og:tags" content="Lecture">
+  
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="canonical" href="https://jordi02183.github.io/post/13.shortestpathproblemdijkstra/">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/agate.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXX-X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-XXXXXXXX-X');
+  </script>
+  
+  
+  <script type="text/javascript">
+  function toggle_visibility(id) {
+    var e = document.getElementById(id);
+    if (e.className === 'menu')
+      e.className = 'menu hidden';
+    else
+      e.className = 'menu';
+  }
+  </script>
+</head>
+<body>
+  <div class="navbar">    
+    <div class="logo">
+      <a href="/">
+        <img src="/images/logo.png" height="42px" />
+      </a>
+    </div>
+    <div class="burger">
+      <button onclick="toggle_visibility('menu')">
+        <i class="fa fa-bars" aria-hidden="true"></i> 메뉴
+      </button>
+    </div>
+    <div id="menu" class="menu hidden">
+      <ul>
+        <li><a href="/">전체글보기</a></li>
+        <li><a href="/categories">카테고리</a></li>
+        <li><a href="/tags">태그</a></li>
+        <li><a href="/projects">포트폴리오</a></li>        
+      </ul>
+      <input class="search" id="search-input" type="search" placeholder="검색어" value="">
+    </div>
+  </div>
+  <div class="container">    
+
+<div class="post">
+  <div class="post-title">
+    <a href="https://jordi02183.github.io/post/13.shortestpathproblemdijkstra/">
+      <img src="/images/post-title-icon.png" />
+      <div class="post-meta">
+        <time>2020년 5월 15일 13시 35분</time>
+        <h1>13.최단경로, 다익스트라 알고리즘(Shorted Path Problem, Dijkstra Algorithm)</h1>
+      </div>
+    </a>
+  </div>
+  <div class="post-toc">
+    <span class="title">차례</span>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#최단경로shorted-path-problem">최단경로(Shorted Path Problem)</a></li>
+    <li><a href="#다익스트라-알고리즘dijkstra-algorithm">다익스트라 알고리즘(Dijkstra Algorithm)</a></li>
+  </ul>
+</nav>
+  </div>
+  <section class="post-content">
+    <p>다익스트라는 네덜란드 출신의 컴퓨터 과학자이면서, 튜링상 수상자이다. 개발자는 숫자를 0부터 세고, GoTo를 혐오하는 것은 이 다익스트라 아저씨가 제안한 것 덕분(떄문?)이라고 한다.</p>
+<h2 id="최단경로shorted-path-problem">최단경로(Shorted Path Problem)</h2>
+<p>최단경로는 앞에서 설명한 최소신장트리와는 비슷하면서도 다르다. 최소신장트리는 모든 경로에서 최단인 경로를 찾아내는 문제이고, 최단경로는 그 중 두 정점에만 집중해 두 정점의 가중치가 최소인 경로를 찾아내는 것이다. 최소신장트리의 일부분은 모두 최단경로이고, 최단경로의 일부 또한 모두 최단경로이다.</p>
+<p>단일점 최단경로 : 한 정점에서부터 도달하지 못하는 정점을 제외한 다른 모든 정점으로 이르는 최단경로를 모아놓은 것. 단일 출발지 최단 경로라고도 한다.</p>
+<ul>
+<li>최단경로와 최소신장트리의 차이점</li>
+</ul>
+<ol>
+<li>최단경로는 최소신장트리와는 달리 무방향그래프 뿐 아니라 방향그래프에서도 정의된다.</li>
+<li>최단경로는 음의 무게를 가진 cycle이 있거나, 무방향그래프에 음의 무게를 가진 간선이 있으면 정해지지 않는다(상식적으로, 움직일때마다 코스트가 줄어들면 무한히 그 코스트를 줄이는 방향으로 움직일 것이기 때문에..)</li>
+<li>최소신장트리와 달리 최단경로트리는 한 정점에서만 실행되는 루트트리이다.</li>
+</ol>
+<p>보통 최단경로 알고리즘을 푸는 방식은 방향인지 무방향인지, 싸이클인지 비싸이클인지 경우에 따라 최적의 알고리즘이 따로 존재한다.</p>
+<ol>
+<li>음의 무게를 가진 간선이 없는 그래프는 다익스트라 알고리즘으로 처리한다.</li>
+<li>음의 무게를 가진 간선이 있는 방향그래프는 BFS를 통해 구할 수 있다.</li>
+<li>비싸이클 형태의 그래프는 위상순서를 이용해 구할 수 있다.</li>
+</ol>
+<p>여기서 위상순서와 BFS는 모든 노드와 간선을 찾아야 하기 때문에 O(m+n)의 시간이 걸리고, 다익스트라 알고리즘은 힙으로 구현하면 O(mlogn) 또는 무순리스트로 구현하면 O(n^2)시간이 걸린다. BFS와 위상순서는 저번에 구현했으니 이번에는 다익스트라 알고리즘에 대해 공부해보자.</p>
+<h2 id="다익스트라-알고리즘dijkstra-algorithm">다익스트라 알고리즘(Dijkstra Algorithm)</h2>
+<p>다익스트라 알고리즘은 음의 무게를 가진 간선이 없을때 적용되는 최소경로 그래프 찾기 알고리즘이다. 다익스트라 알고리즘 또한 탐욕법(Greedy)에 의해 움직이는 알고리즘이다.</p>
+<p>다익스트라 알고리즘은 거리 개념에서부터 시작한다. 정점 s와 정점 v의 길이는 s와 v 사이의 최단경로의 길이라고 생각하자. 출발정점 s로 가는 다른 모든 정점까지의 거리를 계산해 최단경로트리를 만든다. 그리고 각 정점 v에 출발정점과의 거리인 d(v)를 저장해 배낭과 인접 정점을 구성하는 부그래프에서의 s로부터 v의 거리를 표현하도록 한다. 이를 반복하면서 배낭 밖 정점 가운데 거리 라벨 d가 최소인 정점 u를 배낭에 넣고 u에 인접한 정점들의 라벨을 갱신한다.</p>
+<p>아래는 무순 배열리스트를 이용해 O(n^2)에 해결한 다익스트라 알고리즘의 예시이다.(과제때문에 정신나간듯이 코딩했었는데&hellip;. 지금 보니까 부끄럽다. 나중에 꼭 리팩토링 하자)</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">103
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">104
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">105
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">106
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">107
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">108
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">109
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span><span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span><span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span><span style="color:#75715e">&lt;string.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> tagVertex {
+	<span style="color:#66d9ef">int</span> vertNum;
+	<span style="color:#66d9ef">int</span> level;<span style="color:#75715e">//기준 범위에서 얼마나 비용이 필요한지
+</span><span style="color:#75715e"></span>}Vert;
+
+<span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> tagEdge {
+	<span style="color:#66d9ef">int</span> height;<span style="color:#75715e">//가중치
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">struct</span> tagVertex<span style="color:#f92672">*</span> vert1;
+	<span style="color:#66d9ef">struct</span> tagVertex<span style="color:#f92672">*</span> vert2;
+}Edge;
+
+Vert<span style="color:#f92672">*</span> <span style="color:#a6e22e">opposite</span>(Edge <span style="color:#f92672">*</span>edge, Vert<span style="color:#f92672">*</span> vert) {
+	<span style="color:#66d9ef">if</span> (edge<span style="color:#f92672">-&gt;</span>vert1 <span style="color:#f92672">==</span> vert) <span style="color:#66d9ef">return</span> edge<span style="color:#f92672">-&gt;</span>vert2;
+	<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">return</span> edge<span style="color:#f92672">-&gt;</span>vert1;
+}
+
+
+Vert<span style="color:#f92672">*</span> <span style="color:#a6e22e">removeMin</span>(Vert<span style="color:#f92672">**</span> queue,<span style="color:#66d9ef">int</span> x) {
+	<span style="color:#66d9ef">int</span> min <span style="color:#f92672">=</span> <span style="color:#ae81ff">99999999</span>, mini <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>,i;
+	Vert<span style="color:#f92672">*</span> minVert;
+	<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> x; i<span style="color:#f92672">++</span>) {
+		<span style="color:#66d9ef">if</span> (min <span style="color:#f92672">&gt;</span> queue[i]<span style="color:#f92672">-&gt;</span>level) {
+			min <span style="color:#f92672">=</span> queue[i]<span style="color:#f92672">-&gt;</span>level;
+			minVert <span style="color:#f92672">=</span> queue[i];
+			mini <span style="color:#f92672">=</span> i;
+		}
+	}
+	<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> mini; i <span style="color:#f92672">&lt;</span> x <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>; i<span style="color:#f92672">++</span>) {
+		queue[i] <span style="color:#f92672">=</span> queue[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>];
+	}
+	<span style="color:#66d9ef">return</span> minVert;
+}<span style="color:#75715e">//왼쪽으로 갈 수록 큼.
+</span><span style="color:#75715e"></span>
+
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#66d9ef">int</span> i, j, N, M,S;
+	<span style="color:#66d9ef">int</span> <span style="color:#f92672">**</span>arr;
+	Edge <span style="color:#f92672">**</span>edge;<span style="color:#75715e">//간선과 가중치 포함하는 행렬
+</span><span style="color:#75715e"></span>	Vert <span style="color:#f92672">**</span>vert;
+	scanf(<span style="color:#e6db74">&#34;%d %d %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">&amp;</span>N, <span style="color:#f92672">&amp;</span>M, <span style="color:#f92672">&amp;</span>S);
+	arr <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span><span style="color:#f92672">**</span>)malloc(<span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span>)<span style="color:#f92672">*</span>N);
+	edge <span style="color:#f92672">=</span> (Edge<span style="color:#f92672">**</span>)malloc(<span style="color:#66d9ef">sizeof</span>(Edge<span style="color:#f92672">*</span>)<span style="color:#f92672">*</span>M);<span style="color:#75715e">//M개의 간선
+</span><span style="color:#75715e"></span>	vert <span style="color:#f92672">=</span> (Vert<span style="color:#f92672">**</span>)malloc(<span style="color:#66d9ef">sizeof</span>(Vert<span style="color:#f92672">*</span>)<span style="color:#f92672">*</span>N);<span style="color:#75715e">//N개의 정점
+</span><span style="color:#75715e"></span>
+
+	<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> N; i<span style="color:#f92672">++</span>) {
+		arr[i] <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span>)malloc(<span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span>)<span style="color:#f92672">*</span>N);
+		vert[i] <span style="color:#f92672">=</span> (Vert<span style="color:#f92672">*</span>)calloc(<span style="color:#66d9ef">sizeof</span>(Vert), N);
+		vert[i]<span style="color:#f92672">-&gt;</span>level <span style="color:#f92672">=</span> <span style="color:#ae81ff">30000</span>;<span style="color:#75715e">//max로 설정.
+</span><span style="color:#75715e"></span>		vert[i]<span style="color:#f92672">-&gt;</span>vertNum <span style="color:#f92672">=</span> i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>;
+		<span style="color:#66d9ef">for</span> (j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> N; j<span style="color:#f92672">++</span>) {
+			arr[i][j] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;<span style="color:#75715e">//간선은 없는 것으로, 가중치는 0으로 초기화
+</span><span style="color:#75715e"></span>		}
+	}<span style="color:#75715e">//정점 초기화
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> M; i<span style="color:#f92672">++</span>) {
+		<span style="color:#66d9ef">int</span> x, y, z;
+		scanf(<span style="color:#e6db74">&#34;%d %d %d&#34;</span>, <span style="color:#f92672">&amp;</span>x, <span style="color:#f92672">&amp;</span>y, <span style="color:#f92672">&amp;</span>z);
+		arr[x <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>][y <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>, arr[y <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>][x <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>;
+		<span style="color:#75715e">//i번째 edge라는 소리. edge[i]로 찾을수있음.
+</span><span style="color:#75715e"></span>		edge[i] <span style="color:#f92672">=</span> (Edge<span style="color:#f92672">*</span>)malloc(<span style="color:#66d9ef">sizeof</span>(Edge));
+		edge[i]<span style="color:#f92672">-&gt;</span>height <span style="color:#f92672">=</span> z;
+		edge[i]<span style="color:#f92672">-&gt;</span>vert1 <span style="color:#f92672">=</span> vert[x<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>];
+		edge[i]<span style="color:#f92672">-&gt;</span>vert2 <span style="color:#f92672">=</span> vert[y<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>];
+	}<span style="color:#75715e">//간선 초기화
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">////////////////////////////초기화///////////////////////////////
+</span><span style="color:#75715e"></span>
+
+
+	Vert<span style="color:#f92672">**</span> queue <span style="color:#f92672">=</span> (Vert<span style="color:#f92672">**</span>)malloc(<span style="color:#66d9ef">sizeof</span>(Vert<span style="color:#f92672">*</span>)<span style="color:#f92672">*</span>N);<span style="color:#75715e">//N개를 넣을 수 있는 queue 설정
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;<span style="color:#75715e">//큐에 들어가 있는 원소가 몇개인지 알려줌. 한개도 없을 때 0
+</span><span style="color:#75715e"></span>	vert[S<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">-&gt;</span>level <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;<span style="color:#75715e">//S-1번 정점의 level은 0
+</span><span style="color:#75715e"></span>
+	<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> N; i<span style="color:#f92672">++</span>) {
+		queue[x] <span style="color:#f92672">=</span> vert[i];
+		x<span style="color:#f92672">++</span>;
+	}<span style="color:#75715e">//queue에 간선 추가.
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">int</span> result <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+	<span style="color:#66d9ef">while</span> (x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+		<span style="color:#66d9ef">int</span> flag <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+		Vert<span style="color:#f92672">*</span> u <span style="color:#f92672">=</span> removeMin(queue, x);
+		x<span style="color:#f92672">--</span>;
+		<span style="color:#66d9ef">for</span>(i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;i<span style="color:#f92672">&lt;</span>N;i<span style="color:#f92672">++</span>){
+			Edge<span style="color:#f92672">*</span> edgeTmp <span style="color:#f92672">=</span> edge[arr[u<span style="color:#f92672">-&gt;</span>vertNum <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>][i]<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>];
+			<span style="color:#66d9ef">if</span>(arr[u<span style="color:#f92672">-&gt;</span>vertNum <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>][i] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>){
+				Vert<span style="color:#f92672">*</span> tmp <span style="color:#f92672">=</span> opposite(edgeTmp, u);
+				flag <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+				<span style="color:#66d9ef">for</span> (j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> x; j<span style="color:#f92672">++</span>) {
+					<span style="color:#66d9ef">if</span> (queue[j] <span style="color:#f92672">==</span> tmp) {
+						flag <span style="color:#f92672">=</span> j;
+						<span style="color:#66d9ef">break</span>;
+					}
+				}
+				<span style="color:#66d9ef">if</span> (flag <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">continue</span>;
+				<span style="color:#66d9ef">if</span> (tmp<span style="color:#f92672">-&gt;</span>level <span style="color:#f92672">&gt;</span> u<span style="color:#f92672">-&gt;</span>level <span style="color:#f92672">+</span> edgeTmp<span style="color:#f92672">-&gt;</span>height) {
+					tmp<span style="color:#f92672">-&gt;</span>level <span style="color:#f92672">=</span> u<span style="color:#f92672">-&gt;</span>level <span style="color:#f92672">+</span> edgeTmp<span style="color:#f92672">-&gt;</span>height;
+ 				}
+			}
+		}
+	}
+	<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> N; i<span style="color:#f92672">++</span>) {
+		<span style="color:#66d9ef">if</span> (vert[i]<span style="color:#f92672">-&gt;</span>level <span style="color:#f92672">==</span> <span style="color:#ae81ff">30000</span> <span style="color:#f92672">||</span> vert[i]<span style="color:#f92672">-&gt;</span>level <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">continue</span>;
+		printf(<span style="color:#e6db74">&#34;%d %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, vert[i]<span style="color:#f92672">-&gt;</span>vertNum, vert[i]<span style="color:#f92672">-&gt;</span>level);
+	} 
+	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}</code></pre></td></tr></table>
+</div>
+</div>
+
+  </section>
+  <div class="share">    
+    <a
+      href="//www.facebook.com/sharer.php?src=bm&u=https%3a%2f%2fjordi02183.github.io%2fpost%2f13.shortestpathproblemdijkstra%2f&t=13.%ec%b5%9c%eb%8b%a8%ea%b2%bd%eb%a1%9c%2c%20%eb%8b%a4%ec%9d%b5%ec%8a%a4%ed%8a%b8%eb%9d%bc%20%ec%95%8c%ea%b3%a0%eb%a6%ac%ec%a6%98%28Shorted%20Path%20Problem%2c%20Dijkstra%20Algorithm%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-facebook"></i
+    ></a>
+    <a
+      href="//twitter.com/intent/tweet?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f13.shortestpathproblemdijkstra%2f&text=13.%ec%b5%9c%eb%8b%a8%ea%b2%bd%eb%a1%9c%2c%20%eb%8b%a4%ec%9d%b5%ec%8a%a4%ed%8a%b8%eb%9d%bc%20%ec%95%8c%ea%b3%a0%eb%a6%ac%ec%a6%98%28Shorted%20Path%20Problem%2c%20Dijkstra%20Algorithm%29&tw_p=tweetbutton"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-twitter"></i
+    ></a>
+    <a
+      href="//getpocket.com/edit?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f13.shortestpathproblemdijkstra%2f&title=13.%ec%b5%9c%eb%8b%a8%ea%b2%bd%eb%a1%9c%2c%20%eb%8b%a4%ec%9d%b5%ec%8a%a4%ed%8a%b8%eb%9d%bc%20%ec%95%8c%ea%b3%a0%eb%a6%ac%ec%a6%98%28Shorted%20Path%20Problem%2c%20Dijkstra%20Algorithm%29"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-get-pocket"></i
+    ></a>
+    <a
+      href="//plus.google.com/share?url=https%3a%2f%2fjordi02183.github.io%2fpost%2f13.shortestpathproblemdijkstra%2f"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-google-plus"></i
+    ></a>
+  </div>
+  <div class="post-meta-code">
+    <div class="desc">
+      postAuthorPrefix
+      
+      <a href="mailto:sjc02183@naver.com">ChangHakKim</a>
+      
+      이
+      <span class="highlight">2020년 5월 15일 13시 35분</span> 
+      에 작성한 글입니다.
+    </div>
+    <div class="desc">
+      
+      <div class="desc">
+        <span class="fixed-desc">_카테고리</span>
+        
+        
+        <a href="https://jordi02183.github.io//categories/data-structure">#Data Structure</a>
+        
+      </div>
+      
+      <div class="desc">
+        <span class="fixed-desc">_태그</span>
+        
+        
+        <a href="https://jordi02183.github.io/tags/data-structure">#Data Structure</a>
+        
+        <a href="https://jordi02183.github.io/tags/lecture">#Lecture</a>
+        
+        
+      </div>
+    </div>
+  </div>  
+  
+  <div class="post-comment">    
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "XXXX" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>    
+  </div>
+  
+  <div class="recommend-articles">
+    이전/다음글
+    <ul>
+      
+      <li>
+        <a href="https://jordi02183.github.io/post/12.weightgraphmst/" rel="prev">
+          <span>12.가중 그래프와 최소신장트리(Weighted Graph, Minimum Spanning Tree)</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+</div>
+
+<div class="go-top">
+  <a href="#" class="go-top-button">
+    <i class="fa fa-angle-double-up"></i>
+    <span>위로</span>
+  </a>
+</div>
+<footer class="footer">
+  COPYRIGHT (C) <a href="https://blog.lulab.net">DONGGEUN,BANG (LUBANG).</a><br />
+  ALL RIGHTS RESERVED.
+</footer>
+</body>
+</html>
+
